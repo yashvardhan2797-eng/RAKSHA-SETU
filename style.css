@@ -1,0 +1,257 @@
+/* style.css - Updated with Ashok Stambh BG + Profile + Medium Red Cancel */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Ashok Stambh Background */
+.ashok-bg {
+    position: fixed;
+    top: 20%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjkwIiBmaWxsPSIjRkZOTkzMyIgc3Ryb2tlPSIjRkZENTAwIiBzdHJva2Utd2lkdGg9IjgiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjYwIiBmaWxsPSIjRkY2QjM1Ii8+PHBhdGggZD0iTTgwIDYwIFExMDAgNDAgMTIwIDYwIFExMDAgODAgODAgNjAiIGZpbGw9IiNGRkQ3MDAiLz48cGF0aCBkPSJNOSAwUTEwMCA4MCAxMTAgOTAiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSI2IiBmaWxsPSJub25lIi8+PC9zdmc+') center/contain no-repeat;
+    opacity: 0.1;
+    z-index: -1;
+    animation: float 20s infinite linear;
+}
+
+@keyframes float {
+    0% { transform: rotate(0deg) translateY(0px); }
+    100% { transform: rotate(360deg) translateY(-20px); }
+}
+
+.header {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 10;
+}
+
+.ashok-icon {
+    margin-bottom: 15px;
+}
+
+.stambh-svg {
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+/* Profile Section */
+.profile-section {
+    padding: 20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    margin: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid #ff6b35;
+}
+
+.profile-info h3 {
+    color: #ff6b35;
+    margin-bottom: 10px;
+}
+
+.profile-info p {
+    margin-bottom: 5px;
+    opacity: 0.9;
+}
+
+/* Timer Overlay - MEDIUM RED CANCEL BUTTON */
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(220, 53, 69, 0.98);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: pulse 1s infinite;
+}
+
+.timer-display {
+    background: rgba(255,255,255,0.95);
+    padding: 40px 30px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    color: #dc3545;
+    margin-bottom: 30px;
+}
+
+.timer-display h2 {
+    font-size: 4.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.cancel-btn {
+    width: 280px;
+    height: 70px;
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    border: 3px solid #fff;
+    border-radius: 50px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 10px 25px rgba(220,53,69,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.cancel-btn:hover {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(220,53,69,0.6);
+}
+
+/* Rest of CSS remains same as previous */
+.main-content {
+    padding: 30px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #ff6b35;
+}
+
+.emergency-section, .helpline-section {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.hospital-card {
+    background: rgba(255,255,255,0.15);
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    transition: transform 0.3s;
+}
+
+.hospital-card:hover {
+    transform: translateY(-5px);
+}
+
+.hospital-card h3 {
+    color: #ff6b35;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+}
+
+.hospital-card p {
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.hospital-card button {
+    background: linear-gradient(45deg, #ff6b35, #f7931e);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+
+.hospital-card button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(255,107,53,0.4);
+}
+
+.helpline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.helpline-card {
+    background: linear-gradient(135deg, rgba(255,107,53,0.2), rgba(247,147,30,0.2));
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.helpline-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    background: linear-gradient(135deg, rgba(255,107,53,0.4), rgba(247,147,30,0.4));
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.helpline-card i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #ff6b35;
+}
+
+.helpline-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.helpline-card span {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.95; }
+    50% { opacity: 1; }
+    100% { opacity: 0.95; }
+}
+
+@media (max-width: 768px) {
+    .timer-display h2 { font-size: 3.5rem; }
+    .cancel-btn { width: 250px; height: 60px; font-size: 1.2rem; }
+    .helpline-grid { grid-template-columns: repeat(2, 1fr); }
+    .profile-card { flex-direction: column; text-align: center; }
+}
