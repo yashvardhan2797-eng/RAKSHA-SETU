@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raksha-setu - Emergency App</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background Ashok Stambh -->
+    <div class="ashok-bg"></div>
+
+    <!-- Header with Ashok Stambh Icon -->
+    <header class="header">
+        <div class="national-symbols">
+            <div class="ashok-icon">
+                <svg viewBox="0 0 200 200" class="stambh-svg">
+                    <circle cx="100" cy="100" r="90" fill="#FF9933" stroke="#FFD700" stroke-width="8"/>
+                    <circle cx="100" cy="100" r="60" fill="#FF6B35"/>
+                    <path d="M80 60 Q100 40 120 60 Q100 80 80 60" fill="#FFD700"/>
+                    <path d="M90 90 Q100 80 110 90" stroke="#FFD700" stroke-width="6" fill="none"/>
+                </svg>
+            </div>
+            <h1>Raksha-Setu</h1>
+            <p>Emergency Response System</p>
+        </div>
+    </header>
+
+    <!-- Profile Section -->
+    <section class="profile-section">
+        <div class="profile-card">
+            <img src="https://via.placeholder.com/80x80/FF6B35/FFFFFF?text=DP" alt="Profile" class="profile-img">
+            <div class="profile-info">
+                <h3>Rahul Sharma</h3>
+                <p><i class="fas fa-car"></i> Vehicle: RJ-14-AB-1234</p>
+                <p><i class="fas fa-tint"></i> Blood Group: B+</p>
+                <p><i class="fas fa-map-marker-alt"></i> Jaipur, Rajasthan</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timer Display Section -->
+    <section class="timer-section">
+        <div class="overlay alert-overlay" id="alertOverlay">
+            <div class="timer-display">
+                <h2 id="timerDisplay">30</h2>
+                <p>Emergency Active - Reply CANCEL if False Alarm</p>
+            </div>
+            <button class="cancel-btn" id="cancelBtn" onclick="cancelAlarm()">
+                <i class="fas fa-times-circle"></i>
+                CANCEL FALSE ALARM
+            </button>
+        </div>
+    </section>
+
+    <!-- Main Emergency Cards -->
+    <main class="main-content">
+        <!-- Nearby Hospitals -->
+        <section class="emergency-section">
+            <h2><i class="fas fa-hospital"></i> Nearby Hospitals</h2>
+            <div class="hospital-card">
+                <h3>Sawai Man Singh Hospital</h3>
+                <p><i class="fas fa-phone"></i> 0141-2518188</p>
+                <p><i class="fas fa-map-marker-alt"></i> Jaipur, Rajasthan</p>
+                <button onclick="callHospital('01412518188')">Call Now</button>
+            </div>
+            <div class="hospital-card">
+                <h3>Mahatma Gandhi Hospital</h3>
+                <p><i class="fas fa-phone"></i> 0141-2544038</p>
+                <p><i class="fas fa-map-marker-alt"></i> Sitapura, Jaipur</p>
+                <button onclick="callHospital('01412544038')">Call Now</button>
+            </div>
+        </section>
+
+        <!-- National Helplines -->
+        <section class="helpline-section">
+            <h2><i class="fas fa-life-ring"></i> National Helplines</h2>
+            <div class="helpline-grid">
+                <div class="helpline-card" onclick="dial('100')">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Police</h3>
+                    <span>100</span>
+                </div>
+                <div class="helpline-card" onclick="dial('108')">
+                    <i class="fas fa-ambulance"></i>
+                    <h3>Ambulance</h3>
+                    <span>108</span>
+                </div>
+                <div class="helpline-card" onclick="dial('1033')">
+                    <i class="fas fa-road"></i>
+                    <h3>Highway</h3>
+                    <span>1033</span>
+                </div>
+                <div class="helpline-card" onclick="dial('181')">
+                    <i class="fas fa-user-shield"></i>
+                    <h3>Women</h3>
+                    <span>181</span>
+                </div>
+                <div class="helpline-card" onclick="dial('1098')">
+                    <i class="fas fa-child"></i>
+                    <h3>Child</h3>
+                    <span>1098</span>
+                </div>
+                <div class="helpline-card" onclick="dial('112')">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Emergency</h3>
+                    <span>112</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
