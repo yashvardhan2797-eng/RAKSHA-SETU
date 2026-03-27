@@ -1,0 +1,1 @@
+{\n  "name": "your-project-name",\n  "version": "1.0.0",\n  "description": "A simple Express.js application",\n  "main": "server.js",\n  "scripts": {\n    "start": "node server.js"\n  },\n  "dependencies": {\n    "express": "^4.17.1"\n  },\n  "engines": {\n    "node": ">=14.0.0"\n  }\n}
