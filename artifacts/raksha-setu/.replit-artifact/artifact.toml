@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "RAKSHA SETU Emergency Platform"
+description = "A frontend-only emergency response control center for monitoring incidents, coordinating vehicles and teams, and simulating operational workflows with realistic local data."
+version = "1.0.0"
+id = "artifacts/raksha-setu"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23534
+
+[services.development]
+run = "pnpm --filter @workspace/raksha-setu run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/raksha-setu", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/raksha-setu/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23534"
+BASE_PATH = "/"

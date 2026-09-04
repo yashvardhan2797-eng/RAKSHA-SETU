@@ -1,0 +1,344 @@
+Build Phase 1 of the RAKSHA SETU Emergency Response Platform.
+
+IMPORTANT:
+This is a frontend-only implementation using mock/local data.
+Do NOT add Supabase, backend APIs, real authentication, real emergency calls, real SMS, real IoT, or external emergency-service integrations.
+
+Do not leave placeholders or unfinished sections.
+
+GOAL
+
+Create the complete production-quality frontend foundation and application shell for RAKSHA SETU.
+
+The application must run successfully with no build errors and no console errors.
+
+TECHNOLOGY
+
+Use:
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+Lucide React icons
+
+React Router if routing is required
+
+Use reusable components and clean folder structure.
+
+1. APPLICATION SHELL
+
+Create a professional desktop-first emergency control-center interface.
+
+Layout:
+
+LEFT:
+Collapsible sidebar.
+
+TOP:
+Professional header.
+
+CENTER:
+Main page content.
+
+The application must occupy the full browser viewport.
+
+2. SIDEBAR
+
+Create sidebar branding:
+
+RAKSHA SETU
+
+Emergency Response Platform
+
+Navigation:
+
+Overview
+Live Incidents
+Vehicles
+Drivers
+Emergency Services
+Response Team
+Incident History
+Analytics
+Demo Simulator
+Settings
+
+Each navigation item must actually navigate to its page.
+
+Highlight the currently active page.
+
+Add collapse/expand functionality.
+
+When collapsed:
+
+show icons
+
+hide labels
+
+When expanded:
+
+show icons and labels
+
+Bottom of sidebar:
+
+System Status
+
+● All Systems Operational
+
+User:
+
+Control Center Admin
+Administrator
+
+Profile button should open a small menu.
+
+3. HEADER
+
+Create a professional header.
+
+LEFT:
+Current page title.
+
+Below title:
+Short page description.
+
+RIGHT:
+
+Search button/input
+Notification button
+Location selector
+Profile button
+
+Example:
+
+Jaipur Control Center
+
+Create notification dropdown.
+
+Create profile dropdown.
+
+These must work.
+
+4. ROUTES
+
+Create these routes/pages:
+
+/overview
+/incidents
+/vehicles
+/drivers
+/emergency-services
+/response-team
+/history
+/analytics
+/demo
+/settings
+
+Every route must render a proper page.
+
+Do NOT leave blank pages.
+
+For pages not fully implemented yet, create a professional structural page with realistic mock content and clear sections so that every route is functional.
+
+5. DESIGN SYSTEM
+
+Use a clean professional visual language.
+
+Primary style:
+
+White background
+Dark navy text
+Subtle blue accents
+Red for critical emergencies
+Orange for high severity
+Green for safe/available
+Gray for neutral information
+
+Use:
+
+subtle borders
+
+small shadows
+
+medium corner radius
+
+consistent spacing
+
+professional typography
+
+Avoid:
+
+neon colors
+
+excessive gradients
+
+glassmorphism
+
+futuristic AI effects
+
+excessive rounded cards
+
+unnecessary animations
+
+This must look like a serious emergency operations platform.
+
+6. GLOBAL COMPONENTS
+
+Create reusable components:
+
+Sidebar
+Header
+PageContainer
+StatusBadge
+Button
+Card
+Modal
+Drawer
+Toast
+Dropdown
+SearchBox
+EmptyState
+LoadingState
+
+Keep components reusable.
+
+7. MOCK DATA ARCHITECTURE
+
+Create a centralized mock-data structure.
+
+Create realistic mock data for:
+
+incidents
+
+vehicles
+
+drivers
+
+ambulances
+
+hospitals
+
+police stations
+
+response teams
+
+notifications
+
+Do not scatter mock data throughout individual components.
+
+Make the structure easy to replace with a backend later.
+
+8. GLOBAL UI STATE
+
+Create frontend state management for:
+
+sidebar collapsed/expanded
+
+notifications
+
+selected incident
+
+selected vehicle
+
+selected driver
+
+demo mode
+
+toast messages
+
+filters
+
+search
+
+Use React state/context where appropriate.
+
+9. RESPONSIVE FOUNDATION
+
+Support:
+
+Desktop
+Laptop
+Tablet
+Mobile
+
+On mobile:
+
+sidebar becomes a drawer
+
+header remains usable
+
+content stacks vertically
+
+tables can horizontally scroll
+
+modals fit the screen
+
+10. IMPORTANT FUNCTIONALITY
+
+Every visible button must do something.
+
+Buttons must:
+
+navigate
+
+open a modal
+
+open a drawer
+
+toggle state
+
+show a toast
+
+open a dropdown
+
+Never create decorative dead buttons.
+
+11. ERROR PREVENTION
+
+Before completing this phase:
+
+fix all TypeScript errors
+
+fix all import errors
+
+fix all routing errors
+
+fix all rendering errors
+
+remove unused broken references
+
+ensure application builds successfully
+
+ensure there are no console errors
+
+12. FINAL VERIFICATION
+
+Do not consider this task complete until ALL of these work:
+
+✓ Application starts
+✓ Sidebar renders
+✓ Sidebar collapse works
+✓ All navigation items work
+✓ Every route loads
+✓ Header renders
+✓ Search UI works
+✓ Notification dropdown works
+✓ Profile dropdown works
+✓ Responsive layout works
+✓ Buttons are functional
+✓ No blank page
+✓ No broken route
+✓ No console errors
+✓ No TypeScript errors
+✓ No build errors
+
+IMPORTANT:
+
+Finish the entire Phase 1 implementation before stopping.
+
+Do not explain what could be implemented later.
+
+Actually implement everything described above now.
