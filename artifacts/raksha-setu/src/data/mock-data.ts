@@ -16,6 +16,13 @@ export type Incident = {
   summary: string;
   assignments: string[];
   responseMinutes: number;
+  vehicle?: string;
+  driver?: string;
+  riskScore?: number;
+  detectionTime?: string;
+  assignedTeam?: string;
+  riskFactors?: string[];
+  timeline?: Array<{ title: string; time: string; detail: string }>;
 };
 
 export const incidents: Incident[] = [
@@ -25,6 +32,8 @@ export const incidents: Incident[] = [
   { id: 'INC-2478', code: 'INC-2478', type: 'Fire alarm', severity: 'Moderate', status: 'Dispatched', location: 'Crescent Tech Park, Tower 4', zone: 'West district', reportedAt: '08:07', updatedAt: '08:32', caller: 'Automated panel', callerPhone: 'Control panel', summary: 'Alarm triggered on level 6. Building evacuation underway; no visible smoke.', assignments: ['FIR-09', 'RSP-01'], responseMinutes: 25 },
   { id: 'INC-2477', code: 'INC-2477', type: 'Waterlogging', severity: 'Moderate', status: 'Monitoring', location: 'Lake Road underpass', zone: 'South corridor', reportedAt: '07:54', updatedAt: '08:21', caller: 'Traffic control', callerPhone: 'Desk 04', summary: 'Road surface submerged by 20cm. Traffic diverted to service lane.', assignments: ['PAT-03'], responseMinutes: 27 },
   { id: 'INC-2476', code: 'INC-2476', type: 'Lost person', severity: 'Low', status: 'Resolved', location: 'Civic gardens, north gate', zone: 'Central district', reportedAt: '07:32', updatedAt: '08:03', caller: 'Nisha Kapoor', callerPhone: '+91 96••• 7802', summary: 'Child reunited with family by park security.', assignments: ['RSP-05'], responseMinutes: 31 },
+  { id: 'INC-2475', code: 'INC-2475', type: 'Road obstruction', severity: 'Moderate', status: 'Active', location: 'Millers Road, junction 4', zone: 'West corridor', reportedAt: '07:20', updatedAt: '08:15', caller: 'Traffic control', callerPhone: 'Desk 02', summary: 'A stalled freight vehicle is blocking two lanes near the junction. Traffic diversion is in progress.', assignments: ['PAT-08'], responseMinutes: 55 },
+  { id: 'INC-2474', code: 'INC-2474', type: 'Medical emergency', severity: 'High', status: 'Dispatched', location: 'Ridgeview apartments', zone: 'South district', reportedAt: '07:06', updatedAt: '08:11', caller: 'Nikhil Verma', callerPhone: '+91 98••• 6204', summary: 'Chest pain reported in a residential tower. Paramedic response is en route to the east entrance.', assignments: ['AMB-02', 'RSP-03'], responseMinutes: 65 },
 ];
 
 export const vehicles = [

@@ -1,0 +1,277 @@
+Build Phase 2 of RAKSHA SETU.
+
+IMPORTANT:
+Do not rebuild the application shell.
+Do not redesign the sidebar.
+Do not remove existing routes.
+Do not break any existing functionality.
+
+Implement the COMPLETE Overview Dashboard using frontend mock data.
+
+Do not add backend/Supabase/authentication.
+
+---
+
+# OVERVIEW DASHBOARD
+
+Route:
+
+/overview
+
+Create a professional emergency control-center dashboard.
+
+---
+
+## 1. PAGE HEADER
+
+Title:
+
+Overview
+
+Description:
+
+Real-time emergency response and road safety operations.
+
+Right side:
+
+Last updated:
+Just now
+
+Refresh button.
+
+Refresh must update the displayed mock-data timestamp.
+
+---
+
+# 2. KPI CARDS
+
+Create:
+
+Active Incidents
+08
+
+Critical Incidents
+03
+
+Vehicles Online
+124
+
+Response Teams
+18
+
+Average Response Time
+08:42
+
+Each card must contain:
+
+* icon
+* title
+* large number
+* supporting information
+* status/trend indicator
+
+Example:
+
++2 today
+-12% this week
+
+Use appropriate severity/status styling.
+
+---
+
+# 3. LIVE OPERATIONS SECTION
+
+Create a large section containing:
+
+LEFT:
+Live incident list/table.
+
+RIGHT:
+Map preview area.
+
+Incident table columns:
+
+Incident ID
+Location
+Type
+Severity
+Time
+Status
+Action
+
+Use at least 8 realistic incidents.
+
+Example:
+
+INC-2041
+NH-44, Jaipur
+Possible Crash
+CRITICAL
+19:32
+Responding
+
+Clicking an incident opens the incident detail drawer.
+
+---
+
+# 4. INCIDENT DETAIL DRAWER
+
+Create a reusable right-side drawer.
+
+Show:
+
+Incident ID
+Incident type
+Severity
+Location
+Vehicle
+Driver
+Risk score
+Detection time
+Current status
+Assigned team
+
+Risk factors:
+
+Sudden deceleration
+Abnormal orientation
+No driver response
+
+Timeline:
+
+Crash detected
+GPS captured
+Driver verification
+Escalation
+Responder assigned
+
+Buttons:
+
+Assign Responder
+Mark Driver Safe
+Escalate
+Resolve Incident
+
+Buttons must update local frontend state and show toast feedback.
+
+---
+
+# 5. RESPONSE STATUS
+
+Create a section:
+
+Emergency Response Status
+
+Police
+Available
+
+Ambulances
+12 Available
+
+Hospitals
+8 Ready
+
+Response Teams
+15 Available
+
+Use professional status indicators.
+
+---
+
+# 6. RECENT ACTIVITY
+
+Create activity timeline.
+
+Example events:
+
+Critical incident detected
+Driver verification timeout
+Ambulance assigned
+Police notified
+Incident resolved
+
+Each activity should have:
+
+icon
+description
+time
+severity
+
+---
+
+# 7. MAP PREVIEW
+
+Create a map section.
+
+Use Leaflet/OpenStreetMap if practical.
+
+Show mock markers for:
+
+incidents
+vehicles
+ambulances
+hospitals
+police stations
+
+Clicking markers should show information.
+
+If map provider configuration prevents loading, create a visually clean fallback map area rather than breaking the dashboard.
+
+---
+
+# 8. QUICK ACTIONS
+
+Create:
+
+Simulate Crash
+View Incidents
+View Vehicles
+Emergency Services
+Demo Simulator
+
+Each button must navigate or trigger the appropriate action.
+
+---
+
+# 9. UI QUALITY
+
+Make the dashboard visually balanced.
+
+Desktop:
+Use multi-column layout.
+
+Tablet:
+Reduce columns.
+
+Mobile:
+Stack sections.
+
+Avoid excessive whitespace.
+
+Avoid oversized cards.
+
+Use professional tables and typography.
+
+---
+
+# FINAL ACCEPTANCE TEST
+
+Do not stop until:
+
+✓ Overview page loads
+✓ KPI cards display
+✓ Incident table works
+✓ Incident drawer works
+✓ Incident actions update state
+✓ Toast notifications work
+✓ Map section renders
+✓ Response status renders
+✓ Recent activity renders
+✓ Quick actions work
+✓ Responsive layout works
+✓ No console errors
+✓ No TypeScript errors
+✓ Existing sidebar/header still work
+✓ Existing routes still work
+
+Implement the entire phase now.
