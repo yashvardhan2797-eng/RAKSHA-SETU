@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RAKSHA SETU · Integration Receiver (DEMO)</title>
+<style>
+  :root{ --bg:#0b1220; --panel:#111b2e; --panel2:#0e1729; --line:#1e2c47; --ink:#e6eefb;
+    --muted:#8fa3c4; --cyan:#22d3ee; --green:#34d399; --amber:#fbbf24; --red:#f87171;
+    --mono:ui-monospace,'Cascadia Code',Consolas,monospace; }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.45 'Segoe UI',system-ui,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:18px 20px 60px}
+  header.top{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+  h1{font-size:18px;margin:0} h1 small{display:block;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:2px}
+  .pills{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;
+    border:1px solid var(--line);background:var(--panel);font-size:11px;font-weight:700}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+  .dot.ok{background:var(--green);box-shadow:0 0 8px var(--green)}
+  .dot.wait{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+  .grid{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;margin-top:16px}
+  @media(max-width:1150px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .card h2{margin:0 0 4px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan)}
+  .card .sub{margin:0 0 12px;font-size:11px;color:var(--muted)}
+  .feed{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow:auto}
+  .feeditem{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--cyan);
+    border-radius:10px;padding:9px 12px;font-size:12px;font-family:var(--mono);cursor:pointer}
+  .feeditem.critical{border-left-color:var(--red)}
+  .feeditem small{color:var(--muted);display:block;font-size:10px;margin-top:2px}
+  .stages{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .stagechip{font-size:9.5px;font-weight:800;letter-spacing:.8px;padding:5px 9px;border-radius:999px;
+    background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
+  .stagechip.done{background:#062a22;border-color:#065f46;color:var(--green)}
+  .stagechip.hot{background:#2a0c0c;border-color:#7f1d1d;color:#fecaca}
+  pre.json{background:#060b15;border:1px solid var(--line);border-radius:10px;padding:12px;
+    font-family:var(--mono);font-size:10.5px;line-height:1.5;color:#9fe8f5;overflow:auto;max-height:300px;margin:8px 0 0}
+  iframe.frame{width:100%;height:560px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .note{font-size:11px;color:var(--amber);border:1px dashed #78350f;background:#1c1405;
+    border-radius:8px;padding:8px 10px;margin-top:10px}
+  .kbd{font-family:var(--mono);font-size:10px;background:#060b15;border:1px solid var(--line);
+    border-radius:6px;padding:2px 6px;color:var(--cyan)}
+  .waiting{color:var(--muted);font-size:12px;padding:14px;border:1px dashed var(--line);border-radius:10px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>RAKSHA SETU · INTEGRATION RECEIVER
+        <small>VEHICLE-INTEGRATION BRIDGE → EVENT INTAKE (ISOLATED DEMO COMPONENT)</small></h1>
+    </div>
+    <div class="pills">
+      <span class="pill"><span class="dot ok" id="dot-sse"></span>SSE STREAM: <span id="st-sse">CONNECTING…</span></span>
+      <span class="pill"><span class="dot wait" id="dot-app"></span>EXISTING APP: <span id="st-app">CHECKING…</span></span>
+      <span class="pill">EVENTS: <span id="st-count">0</span></span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <h2>Live Event Intake <span class="kbd">GET /api/vehicle/stream (SSE)</span></h2>
+        <p class="sub">Real packets POSTed by the vehicle simulator arrive here in real time</p>
+        <div class="feed" id="feed"><div class="waiting">Listening on the SSE stream…<br/>Press SIMULATE ACCIDENT in the vehicle dashboard.</div></div>
+      </div>
+      <div class="card">
+        <h2>Raw Packet <span class="kbd">as received by the bridge</span></h2>
+        <pre class="json" id="raw-json">{ "waiting": "select an event" }</pre>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <h2>Event Lifecycle</h2>
+        <p class="sub">Vehicle-side integration boundary → RAKSHA SETU emergency workflow hand-off</p>
+        <div class="stages" id="stages"></div>
+        <div id="risk-line" style="margin-top:10px;font-size:13px"></div>
+        <div class="note" id="ai-box" style="display:none"></div>
+      </div>
+
+      <div class="card">
+        <h2>Existing RAKSHA SETU Application <span class="kbd">unmodified · localhost:5173</span></h2>
+        <p class="sub">Shown side-by-side for the jury — this component does NOT change it</p>
+        <iframe class="frame" id="app-frame" src="about:blank" referrerpolicy="no-referrer"></iframe>
+        <div class="note">🔒 <b>Integration boundary:</b> the existing RAKSHA SETU frontend is mock-data driven and
+          currently has no external event ingest endpoint. Per the protection rules, this receiver records the
+          event and demonstrates the receiving side. <b>Production integration point:</b> a
+          <span class="kbd">POST /api/vehicle/accident</span> route in
+          <span class="kbd">artifacts/api-server/src/routes</span> (existing express backend) → incident creation
+          in RAKSHA SETU's incident system. The bridge already performs a best-effort forward there and records
+          the honest HTTP result for every event.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const $ = (id) => document.getElementById(id);
+const STAGES = ['NORMAL','ABNORMAL_TELEMETRY','POSSIBLE_INCIDENT','IMPACT_DETECTED','INCIDENT_GENERATED',
+  'TELEMETRY_TRANSMITTED','RAKSHA_SETU_ACKNOWLEDGED','DRIVER_VERIFICATION_PENDING','ESCALATED'];
+let events = {};
+let selected = null;
+let evtCount = 0;
+
+function renderStages(ev) {
+  const idx = ev ? STAGES.indexOf(ev.lifecycle === 'DRIVER_SAFE_CANCELLED' ? 'DRIVER_VERIFICATION_PENDING' : ev.lifecycle) : -1;
+  $('stages').innerHTML = STAGES.map((s, i) => {
+    const cls = i <= idx ? (s === 'ESCALATED' ? ' hot' : ' done') : '';
+    return '<span class="stagechip' + cls + '">' + (i <= idx ? '✓ ' : '') + s + '</span>';
+  }).join('<span style="color:var(--muted)">→</span>');
+  if (ev) {
+    const ecu = ev.packet && ev.packet.ecu;
+    $('risk-line').innerHTML = 'RISK: <b style="color:' + (ev.riskCategory === 'CRITICAL' ? 'var(--red)' :
+      ev.riskCategory === 'HIGH' ? 'var(--amber)' : 'var(--green)') + '">' + ev.riskScore + '/100 · ' +
+      ev.riskCategory + '</b> · vehicle ' + ev.vehicleId + ' · event ' + ev.eventId +
+      (ecu ? '<br/><span style="color:' + (ecu.confidence >= 75 ? 'var(--red)' : 'var(--amber)') + '">⚡ CRASH CONFIDENCE: ' +
+        ecu.confidence + '/100</span> <small style="color:var(--muted)">' + ecu.decision + '</small>' : '') +
+      (ev.rakshaSetuForward ? '<br/><small style="color:var(--muted)">api-server forward: HTTP ' +
+        (ev.rakshaSetuForward.httpStatus ?? 'unreachable') + '</small>' : '');
+  }
+}
+
+function showEvent(ev) {
+  selected = ev;
+  renderStages(ev);
+  $('raw-json').textContent = JSON.stringify(ev, null, 2);
+  // Emergency contacts notified (flow step 7A) — from the api-server dispatch log.
+  const contacts = ev.contactNotifications || [];
+  const box = $('ai-box');
+  const existing = document.getElementById('contacts-box');
+  if (existing) existing.remove();
+  if (contacts.length) {
+    const wrap = document.createElement('div');
+    wrap.id = 'contacts-box';
+    wrap.style.cssText = 'display:block;margin-top:10px;border:1px solid #1e3a5f;border-radius:8px;padding:10px;background:#0b1523';
+    const chips = contacts.map((c) => {
+      const color = c.status === 'sent' ? '#34d399' : c.status === 'failed' ? '#f87171' : '#fbbf24';
+      const icon = c.status === 'sent' ? '✓' : c.status === 'failed' ? '✕' : '⏱';
+      return '<div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;font-size:12px">' +
+        '<span>📱 ' + c.contactName + ' · <span style="font-family:monospace">' + c.contactPhone + '</span></span>' +
+        '<span style="color:' + color + ';font-weight:700">' + icon + ' ' + c.status.toUpperCase() + (c.channel === 'queued' ? ' · DEMO' : '') + '</span></div>';
+    }).join('');
+    wrap.innerHTML = '<div style="font-size:10px;letter-spacing:1.5px;color:#7dd3fc;margin-bottom:4px">EMERGENCY CONTACTS NOTIFIED' +
+      (ev.persistedToDatabase ? ' · 💾 PERSISTED' : '') + '</div>' + chips;
+    box.parentNode.insertBefore(wrap, box);
+  }
+  if (ev && ev.aiSummary && ev.aiSummary.summary) {
+    box.style.display = 'block';
+    box.innerHTML = '🤖 <b>AI INCIDENT SUMMARY</b> <span class="kbd">' + ev.aiSummary.model +
+      '</span> <span class="kbd">AI-generated · simulated data</span><br/>' + ev.aiSummary.summary;
+  } else {
+    box.style.display = 'none';
+  }
+}
+
+function addFeedItem(ev) {
+  events[ev.eventId] = ev;
+  evtCount += 1;
+  $('st-count').textContent = String(evtCount);
+  const feed = $('feed');
+  if (feed.querySelector('.waiting')) feed.innerHTML = '';
+  const div = document.createElement('div');
+  const ecuConf = ev.packet && ev.packet.ecu ? ev.packet.ecu.confidence : null;
+  div.className = 'feeditem' + (ev.riskCategory === 'CRITICAL' ? ' critical' : '');
+  div.innerHTML = '<b>🚨 ' + ev.eventId + ' · ' + ev.eventType + '</b> · risk ' + ev.riskScore +
+    '/100 (' + ev.riskCategory + ')' + (ecuConf !== null ? ' · ⚡ conf ' + ecuConf + '/100' : '') +
+    '<small>' + ev.vehicleId + ' · ' + new Date(ev.createdAt).toTimeString().slice(0, 8) +
+    ' · lifecycle ' + ev.lifecycle + '</small>';
+  div.onclick = () => showEvent(ev);
+  feed.prepend(div);
+  showEvent(ev);
+}
+
+function updateEvent(ev) {
+  events[ev.eventId] = ev;
+  if (selected && selected.eventId === ev.eventId) { selected = ev; showEvent(ev); }
+}
+
+const es = new EventSource('/api/vehicle/stream');
+es.addEventListener('hello', () => {
+  $('dot-sse').className = 'dot ok'; $('st-sse').textContent = 'CONNECTED';
+});
+es.addEventListener('telemetry', (e) => {
+  const p = JSON.parse(e.data);
+  if (p.eventType !== 'NORMAL_TELEMETRY' && p.eventType !== 'TEST_TELEMETRY') return;
+  const feed = $('feed');
+  if (feed.querySelector('.waiting')) feed.innerHTML = '';
+  const div = document.createElement('div');
+  div.className = 'feeditem';
+  div.innerHTML = '<b>📦 ' + p.packetId + ' · ' + p.eventType + '</b><small>' + p.vehicleId + ' · speed ' +
+    p.vehicle.speedKmh + ' · risk ' + p.risk.score + '</small>';
+  div.onclick = () => { $('raw-json').textContent = JSON.stringify(p, null, 2); };
+  feed.prepend(div);
+});
+es.addEventListener('accident', (e) => addFeedItem(JSON.parse(e.data)));
+es.addEventListener('event', (e) => updateEvent(JSON.parse(e.data)));
+es.addEventListener('reset', () => {
+  events = {}; evtCount = 0; selected = null;
+  $('st-count').textContent = '0';
+  $('feed').innerHTML = '<div class="waiting">Demo reset — listening again…</div>';
+  $('stages').innerHTML = ''; $('risk-line').textContent = '';
+  $('raw-json').textContent = '{ "waiting": "select an event" }';
+});
+es.onerror = () => {
+  $('dot-sse').className = 'dot wait'; $('st-sse').textContent = 'RECONNECTING…';
+};
+
+async function checkApp() {
+  try {
+    const res = await fetch('/api/vehicle/health');
+    const s = await res.json();
+    $('dot-app').className = 'dot ' + (s.rakshaSetuApp === 'CONNECTED' ? 'ok' : 'wait');
+    $('st-app').textContent = s.rakshaSetuApp === 'CONNECTED' ? 'RUNNING' : 'NOT RUNNING';
+    if (s.rakshaSetuApp === 'CONNECTED') {
+      $('app-frame').src = s.appUrl + '/';
+    } else {
+      $('app-frame').srcdoc = '<body style="font-family:sans-serif;padding:30px;color:#475569">' +
+        '<h3>RAKSHA SETU app is not running</h3><p>Start it with:<br><code>pnpm --filter @workspace/raksha-setu run dev</code> (from the repository root)</p></body>';
+    }
+  } catch { $('st-app').textContent = 'UNKNOWN'; }
+}
+// Backfill events that already exist on the bridge so a receiver opened or
+// refreshed mid-demo shows the full history, not just live SSE traffic.
+async function backfillEvents() {
+  try {
+    const res = await fetch('/api/vehicle/events');
+    const data = await res.json();
+    // API returns newest-first; prepend oldest→newest so the newest lands on top.
+    for (const ev of [...data.events].reverse()) addFeedItem(ev);
+  } catch { /* bridge momentarily unreachable — SSE keeps the page live */ }
+}
+
+checkApp();
+backfillEvents();
+setInterval(checkApp, 10000);
+</script>
+
+</body>
+</html>

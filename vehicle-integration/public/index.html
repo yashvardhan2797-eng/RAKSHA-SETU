@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RAKSHA SETU · Vehicle Integration Simulator (DEMO)</title>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#111b2e; --panel2:#0e1729; --line:#1e2c47; --ink:#e6eefb;
+    --muted:#8fa3c4; --cyan:#22d3ee; --cyan-d:#0e7490; --green:#34d399; --amber:#fbbf24;
+    --red:#f87171; --violet:#a78bfa; --mono:ui-monospace,'Cascadia Code',Consolas,monospace;
+  }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.45 'Segoe UI',system-ui,sans-serif}
+  .wrap{max-width:1500px;margin:0 auto;padding:18px 20px 60px}
+  header.top{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(135deg,#0e7490,#164e63);font-size:20px}
+  h1{font-size:18px;margin:0;letter-spacing:.3px}
+  h1 small{display:block;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:2px}
+  .pills{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;
+    border:1px solid var(--line);background:var(--panel);font-size:11px;font-weight:700}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+  .dot.ok{background:var(--green);box-shadow:0 0 8px var(--green)}
+  .dot.wait{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+  .dot.bad{background:var(--red);box-shadow:0 0 8px var(--red)}
+  .banner{display:none;margin:12px 0 0;padding:10px 14px;border:1px solid #7f1d1d;background:#450a0a;
+    color:#fecaca;border-radius:10px;font-size:12px;font-weight:600}
+  .banner.show{display:flex;align-items:center;gap:10px}
+  .grid{display:grid;grid-template-columns:1.05fr 1fr;gap:16px;margin-top:16px}
+  @media(max-width:1080px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .card h2{margin:0 0 4px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan)}
+  .card .sub{margin:0 0 12px;font-size:11px;color:var(--muted)}
+  .rowline{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed #16233c;font-size:13px}
+  .rowline:last-child{border-bottom:none}
+  .rowline .k{color:var(--muted)} .rowline .v{font-weight:700;text-align:right}
+  .v.mono{font-family:var(--mono)}
+  .gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+  .gauge{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+  .gauge .n{font-family:var(--mono);font-size:24px;font-weight:800;color:var(--cyan)}
+  .gauge .n.hot{color:var(--red)} .gauge .n.warm{color:var(--amber)}
+  .gauge .l{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+  .riskbig{display:flex;align-items:center;gap:16px;margin-top:6px}
+  .riskring{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;flex:none;
+    border:4px solid var(--green);transition:border-color .3s}
+  .riskring .s{font-family:var(--mono);font-size:26px;font-weight:800}
+  .riskring .c{font-size:9px;letter-spacing:1.5px;color:var(--muted);text-align:center}
+  .factors{flex:1;display:flex;flex-direction:column;gap:6px}
+  .factor{display:flex;justify-content:space-between;font-size:12px;background:var(--panel2);
+    border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+  .factor.applied{border-color:var(--red);color:#fecaca}
+  .modelnote{margin-top:10px;font-size:10.5px;color:var(--amber);border:1px dashed #78350f;
+    background:#1c1405;border-radius:8px;padding:7px 10px}
+  .btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+  button.btn{cursor:pointer;border:none;border-radius:10px;padding:12px 16px;font-size:12px;
+    font-weight:800;letter-spacing:.6px;color:#04121c;transition:filter .15s, transform .05s}
+  button.btn:hover{filter:brightness(1.12)} button.btn:active{transform:scale(.98)}
+  button.btn:disabled{opacity:.35;cursor:not-allowed;filter:none}
+  .btn.drive{background:var(--cyan)} .btn.accident{background:var(--red);color:#2b0404}
+  .btn.test{background:var(--violet);color:#170b2e} .btn.safe{background:var(--green)}
+  .btn.sos{background:var(--amber);color:#2d2000} .btn.reset{background:#334155;color:#e2e8f0}
+  .btn.retry{background:transparent;border:1px solid var(--amber);color:var(--amber);padding:6px 10px}
+  .pipeline{display:flex;flex-direction:column;gap:0;margin-top:8px}
+  .stage{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-left:2px solid var(--line);
+    padding-left:14px;margin-left:6px;position:relative;opacity:.35;transition:opacity .25s}
+  .stage::before{content:'';position:absolute;left:-7px;top:12px;width:12px;height:12px;border-radius:50%;
+    background:var(--panel2);border:2px solid var(--line)}
+  .stage.on{opacity:1} .stage.on::before{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  .stage.hot.on::before{background:var(--red);border-color:var(--red);box-shadow:0 0 8px var(--red)}
+  .stage .t{font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;font-weight:700}
+  .stage .d{font-family:var(--mono);font-size:11.5px;color:var(--ink);word-break:break-all}
+  pre.packet{background:#060b15;border:1px solid var(--line);border-radius:10px;padding:12px;
+    font-family:var(--mono);font-size:11px;line-height:1.5;color:#9fe8f5;overflow:auto;max-height:260px;margin:8px 0 0}
+  table.stream{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+  table.stream th{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--muted);text-align:left;padding:5px 6px;border-bottom:1px solid var(--line)}
+  table.stream td{padding:5px 6px;border-bottom:1px dashed #16233c;font-family:var(--mono)}
+  .evt{font-size:12px;padding:7px 9px;border-radius:8px;margin-bottom:6px;background:var(--panel2);
+    border:1px solid var(--line);font-family:var(--mono);display:flex;gap:8px;align-items:baseline}
+  .evt .time{color:var(--muted);font-size:10px;flex:none}
+  .evt.critical{border-color:#7f1d1d;background:#1b0d0d;color:#fecaca}
+  .evt.success{border-color:#065f46;background:#04150f;color:#a7f3d0}
+  .evt.warn{border-color:#78350f;background:#170f04;color:#fde68a}
+  .arch{font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--muted);
+    background:#060b15;border:1px dashed var(--line);border-radius:10px;padding:12px;white-space:pre;overflow-x:auto}
+  .arch b{color:var(--cyan)} .arch i{color:var(--green);font-style:normal}
+  .tag{display:inline-block;font-size:9px;font-weight:800;letter-spacing:1px;padding:2px 7px;
+    border-radius:999px;background:#132a33;color:var(--cyan);border:1px solid #155e75;vertical-align:middle}
+  .tag.sim{background:#2a1602;color:var(--amber);border-color:#78350f}
+  .contacts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  .contact{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:12px}
+  .contact b{display:block;font-size:12px} .contact span{color:var(--muted);font-size:11px}
+  .contact .queued{margin-top:5px;font-size:10px;color:var(--amber);font-weight:700}
+  footer{margin-top:18px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+  .pill2{margin-left:8px}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">🚨</div>
+      <h1>VEHICLE INTEGRATION SIMULATOR
+        <small>RAKSHA SETU · ISOLATED VEHICLE-SIDE DEMO LAYER</small></h1>
+    </div>
+    <div class="pills">
+      <span class="pill"><span class="dot ok" id="dot-bridge"></span>VEHICLE INTEGRATION: <span id="st-bridge">CONNECTED</span></span>
+      <span class="pill"><span class="dot wait" id="dot-app"></span>RAKSHA SETU APP: <span id="st-app">CHECKING…</span></span>
+      <span class="pill"><span class="dot wait" id="dot-api"></span>RAKSHA SETU API: <span id="st-api">CHECKING…</span></span>
+      <button class="btn retry" id="btn-retry">⟳ RETRY CONNECTION</button>
+    </div>
+  </header>
+
+  <div class="banner" id="fail-banner">⚠ Unable to reach RAKSHA SETU integration endpoint.
+    <button class="btn retry" id="btn-retry2">⟳ RETRY CONNECTION</button></div>
+
+  <div class="banner show" style="border-color:#78350f;background:#170f04;color:#fde68a" id="sim-note">
+    🧪 <b>DEMO / SIMULATED DATA</b> — No real vehicle is connected: ECU/OEM sensor <i>values</i> are simulated,
+    but the Vehicle Agent's detection, confidence check and cloud transmission are the real on-board flow.
+  </div>
+
+  <div class="card" style="margin-top:16px" id="agent-card">
+    <h2>Vehicle Agent · ECU / OEM Telematics <span class="tag">10 Hz SENSOR LOOP</span> <span class="tag sim">SIMULATED SENSORS</span></h2>
+    <p class="sub">The software installed in the car: reads ECU/CAN + OEM T-Box + GNSS frames, runs the crash-confidence
+      check, alerts the RAKSHA SETU cloud, and owns the 30-second driver-response window.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" class="agentgrid">
+      <div>
+        <p style="margin:0 0 6px;font-weight:700;color:#9fb3ba;font-size:11px;letter-spacing:.08em">① SENSOR ACQUISITION — ECU/CAN + OEM T-BOX + GNSS</p>
+        <table class="stream" id="ecu-table" style="font-size:11px">
+          <tbody><tr><td colspan="4" style="color:var(--muted)">Waiting for sensor frames…</td></tr></tbody>
+        </table>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-family:var(--mono);font-size:10px;color:var(--muted)">
+          <span>AGENT PHASE: <b id="agent-phase" style="color:var(--cyan)">IDLE</b></span>
+          <span>FRAMES/S: <b id="agent-fps">0</b></span>
+          <span>WINDOW: <b id="agent-window">0 frames</b></span>
+          <span>TRANSMIT: <b id="agent-tx">—</b></span>
+        </div>
+        <p style="margin:12px 0 6px;font-weight:700;color:#9fb3ba;font-size:11px;letter-spacing:.08em">SENSOR-BUS SCENARIO (what the car is experiencing)</p>
+        <div class="btnrow" id="scenario-row">
+          <button class="btn drive" data-scenario="NORMAL_DRIVING">NORMAL DRIVE</button>
+          <button class="btn test" data-scenario="HARD_BRAKING">HARD BRAKING</button>
+          <button class="btn accident" data-scenario="CRASH_IMPACT">💥 CRASH IMPACT</button>
+          <button class="btn test" data-scenario="POTHOLE_SHAKE">POTHOLE SHAKE</button>
+          <button class="btn sos" id="btn-agent-sos">🆘 DRIVER SOS</button>
+          <button class="btn safe" id="btn-agent-safe" disabled>✓ I'M SAFE</button>
+        </div>
+        <p style="margin:6px 0 0;font-size:10px;color:var(--muted)">POTHOLE SHAKE is a false-positive trap: violent vertical shake, but wheel speed barely drops —
+          the confidence check must NOT alert. Watch the discounted indicators.</p>
+      </div>
+      <div>
+        <p style="margin:0 0 6px;font-weight:700;color:#9fb3ba;font-size:11px;letter-spacing:.08em">② CRASH CONFIDENCE CHECK — rolling 2.0 s evidence window</p>
+        <div style="display:flex;gap:14px;align-items:center;margin-bottom:8px">
+          <div class="riskring" id="conf-ring" style="width:92px;height:92px"><div><div class="s" id="conf-score">0</div><div class="c" id="conf-level">IDLE</div></div></div>
+          <div style="flex:1;min-width:0">
+            <div id="conf-reason" style="font-size:11px;color:#cbd5e1;line-height:1.45">Monitoring sensor signature…</div>
+            <div id="conf-gate" style="margin-top:4px;font-family:var(--mono);font-size:10px;color:var(--muted)">family gate: —</div>
+          </div>
+        </div>
+        <table class="stream" id="conf-table" style="font-size:10.5px">
+          <thead><tr><th>Indicator</th><th>Value</th><th>Threshold</th><th>Pts</th></tr></thead>
+          <tbody><tr><td colspan="4" style="color:var(--muted)">No evidence yet.</td></tr></tbody>
+        </table>
+        <div class="modelnote">⚠ Prototype confidence model — thresholds are documented demo values, not certified
+          automotive crash-detection calibration.</div>
+      </div>
+    </div>
+    <p style="margin:14px 0 6px;font-weight:700;color:#9fb3ba;font-size:11px;letter-spacing:.08em">LIVE PIPELINE — RAKSHA SETU CRASH RESPONSE FLOW</p>
+    <div id="flowstrip" style="display:flex;flex-wrap:wrap;gap:6px;font-family:var(--mono);font-size:9.5px">
+      <span class="fstep" id="fc-1">① SENSORS</span>
+      <span class="fstep" id="fc-2">② CONFIDENCE</span>
+      <span class="fstep" id="fc-3">③ APP ALERT</span>
+      <span class="fstep" id="fc-4">④ 30s TIMER</span>
+      <span class="fstep" id="fc-5">⑤ RESPONSE?</span>
+      <span class="fstep" id="fc-6">5A I'M SAFE → CANCEL</span>
+      <span class="fstep" id="fc-7">5B SEND HELP</span>
+      <span class="fstep" id="fc-8">⑥ CONFIRM EMERGENCY</span>
+      <span class="fstep" id="fc-9">7A/7B/7C CONTACTS · POLICE · EMS</span>
+      <span class="fstep" id="fc-10">⑧ RAKSHA SETU CLOUD</span>
+      <span class="fstep" id="fc-11">⑨ RESPONSE TRACKING</span>
+      <span class="fstep" id="fc-12">⑩ INCIDENT CLOSED</span>
+    </div>
+    <style>
+      .fstep{padding:5px 9px;border:1px solid #2d4050;border-radius:6px;color:#5b7285;background:#0d1620;transition:all .25s}
+      .fstep.on{border-color:var(--cyan);color:var(--cyan);background:rgba(14,125,139,.12);box-shadow:0 0 8px rgba(14,125,139,.25)}
+      .fstep.warn{border-color:#f59e0b;color:#fbbf24;background:rgba(245,158,11,.10)}
+      .fstep.danger{border-color:#ef4444;color:#f87171;background:rgba(239,68,68,.12);box-shadow:0 0 8px rgba(239,68,68,.3)}
+      .fstep.good{border-color:#34d399;color:#34d399;background:rgba(52,211,153,.10)}
+      .agentgrid{display:grid !important;grid-template-columns:1fr 1fr;gap:16px}
+      @media(max-width:900px){.agentgrid{grid-template-columns:1fr !important}}
+    </style>
+  </div>
+
+  <div class="grid">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <h2>Vehicle Status <span class="tag sim">SIMULATED</span></h2>
+        <p class="sub">Conceptual vehicle-side view · future production path: ECU → Telematics Gateway → OEM Interface → this adapter</p>
+        <div class="rowline"><span class="k">Vehicle ID</span><span class="v mono" id="v-id">—</span></div>
+        <div class="rowline"><span class="k">Driver</span><span class="v" id="v-driver">—</span></div>
+        <div class="rowline"><span class="k">Vehicle</span><span class="v" id="v-model">—</span></div>
+        <div class="rowline"><span class="k">Telematics unit</span><span class="v" id="v-tel">—</span></div>
+        <div class="rowline"><span class="k">Vehicle status</span><span class="v" id="v-status">—</span></div>
+        <div class="rowline"><span class="k">Ignition</span><span class="v" id="v-ign">—</span></div>
+        <div class="rowline"><span class="k">SOS</span><span class="v" id="v-sos">—</span></div>
+        <div class="rowline"><span class="k">Location <span class="tag sim">SIMULATED VEHICLE LOCATION</span></span>
+          <span class="v mono" id="v-loc">—</span></div>
+        <div class="rowline"><span class="k">Heading</span><span class="v mono" id="v-head">—</span></div>
+      </div>
+
+      <div class="card">
+        <h2>Live Telemetry</h2>
+        <p class="sub">Updates every <span id="cadence">—</span> while driving · values change visibly during the accident simulation</p>
+        <div class="gauges">
+          <div class="gauge"><div class="n" id="g-speed">0</div><div class="l">Speed km/h</div></div>
+          <div class="gauge"><div class="n" id="g-acc">0</div><div class="l">Accel m/s²</div></div>
+          <div class="gauge"><div class="n" id="g-dec">0</div><div class="l">Decel m/s²</div></div>
+          <div class="gauge"><div class="n" id="g-impact">NO</div><div class="l">Impact</div></div>
+          <div class="gauge"><div class="n" id="g-crash">FALSE</div><div class="l">Crash signal</div></div>
+          <div class="gauge"><div class="n" id="g-sos">FALSE</div><div class="l">SOS</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Risk Score <span class="tag">Prototype / Demo Risk Model</span></h2>
+        <p class="sub">Explainable rule engine — NOT certified crash detection</p>
+        <div class="riskbig">
+          <div class="riskring" id="risk-ring"><div><div class="s" id="risk-score">0</div><div class="c">0–100<br/>—</div></div></div>
+          <div class="factors" id="risk-factors"></div>
+        </div>
+        <div class="modelnote">⚠ <b>Prototype / Demo Risk Model</b> — rule-based demo scoring for the hackathon
+          simulation only. It is not a certified automotive crash-detection algorithm.</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <h2>Accident Simulation</h2>
+        <p class="sub">Deterministic T0→T6 timeline — the same sequence every run</p>
+        <div class="btnrow">
+          <button class="btn drive" id="btn-drive">▶ START NORMAL DRIVE</button>
+          <button class="btn accident" id="btn-accident">💥 SIMULATE ACCIDENT</button>
+          <button class="btn test" id="btn-test">⇪ SEND TEST TELEMETRY</button>
+          <button class="btn sos" id="btn-sos">🆘 MANUAL SOS</button>
+          <button class="btn safe" id="btn-safe" disabled>✓ I'M SAFE (DRIVER RESPONSE)</button>
+          <button class="btn reset" id="btn-reset">⟲ RESET DEMO</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Transmission Pipeline <span class="tag">REAL HTTP · NOT AN ANIMATION</span></h2>
+        <p class="sub">Packet is actually serialized and POSTed to the local integration bridge</p>
+        <div class="pipeline">
+          <div class="stage" id="ph-gen"><div><div class="t">1 · PACKET GENERATED</div><div class="d" id="pd-gen">—</div></div></div>
+          <div class="stage" id="ph-tx"><div><div class="t">2 · TRANSMITTING</div><div class="d" id="pd-tx">—</div></div></div>
+          <div class="stage" id="ph-ack"><div><div class="t">3 · PACKET RECEIVED · STATUS</div><div class="d" id="pd-ack">—</div></div></div>
+          <div class="stage hot" id="ph-evt"><div><div class="t">4 · RAKSHA SETU INTEGRATION EVENT CREATED</div><div class="d" id="pd-evt">—</div></div></div>
+          <div class="stage" id="ph-sse"><div><div class="t">5 · RECEIVER DASHBOARDS NOTIFIED (SSE)</div><div class="d" id="pd-sse">—</div></div></div>
+        </div>
+        <pre class="packet" id="packet-json">{ "packet": "…will appear here when telemetry is generated…" }</pre>
+      </div>
+
+      <div class="card">
+        <h2>Event Log</h2>
+        <p class="sub">Vehicle-side + bridge acknowledgements (newest first)</p>
+        <div id="event-log"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Telemetry Stream <span class="tag">POST /api/vehicle/telemetry</span></h2>
+    <p class="sub">Recent packets that were generated, serialized and transmitted to the bridge</p>
+    <table class="stream">
+      <thead><tr><th>Time</th><th>Packet</th><th>Event type</th><th>Speed</th><th>Decel</th><th>Crash</th><th>Risk</th><th>Sent</th></tr></thead>
+      <tbody id="stream-body"><tr><td colspan="8" style="color:var(--muted)">No telemetry yet — press START NORMAL DRIVE.</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <div class="card">
+      <h2>Simulated Emergency Contacts</h2>
+      <p class="sub">Notification events are QUEUED only — no SMS, calls or dispatches are ever sent</p>
+      <div class="contacts">
+        <div class="contact"><b id="c1-name">—</b><span id="c1-rel">—</span><div class="queued">NOTIFICATION: QUEUED (SIMULATED)</div></div>
+        <div class="contact"><b id="c2-name">—</b><span id="c2-rel">—</span><div class="queued">NOTIFICATION: QUEUED (SIMULATED)</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>OEM / ECU Architecture (future production)</h2>
+      <p class="sub">What this prototype represents — and what it does NOT</p>
+      <div class="arch">Vehicle ECU / Sensors
+   ↓  <i>(future: authorized OEM data)</i>
+Vehicle Telematics Unit / Gateway
+   ↓
+Authorized OEM / Third-Party Interface
+   ↓
+<b>Vehicle Integration Adapter  ← THIS SIMULATOR</b>
+   ↓  <i>(local HTTP + SSE for the demo)</i>
+Secure API
+   ↓
+<b>RAKSHA SETU</b> → Incident Intelligence → Driver Verification → Emergency Response</div>
+    </div>
+  </div>
+
+  <footer>
+    <b>RAKSHA SETU Vehicle Integration Simulator</b> — isolated demonstration layer (vehicle-integration/).
+    All vehicle identity, telemetry and location values are <b>SIMULATED</b> for the SIH jury demo.
+    No real ECU/CAN-bus/OEM access, no certified crash detection, no real emergency dispatch.
+    The existing RAKSHA SETU application is not modified by this component.
+    <a href="/receiver" style="color:var(--cyan)">Open the Integration Receiver dashboard →</a>
+  </footer>
+</div>
+<script>
+'use strict';
+// ============================ VEHICLE SIMULATOR UI ============================
+const $ = (id) => document.getElementById(id);
+let SPEC = null;            // deterministic demo spec fetched from the bridge
+let normalTimer = null;     // normal-drive telemetry interval
+let accidentTimers = [];    // deterministic T0..T6 timeouts
+let pendingEventId = null;  // event awaiting driver verification
+let driverResponded = false;
+let accidentRunning = false;
+let lastPacket = null;
+let packetSeq = 0;
+
+const RISK_COLORS = { LOW:'#34d399', MEDIUM:'#fbbf24', HIGH:'#fb923c', CRITICAL:'#f87171' };
+const API = {
+  spec: '/api/vehicle/simulation-spec', health: '/api/vehicle/health',
+  telemetry: '/api/vehicle/telemetry', accident: '/api/vehicle/accident',
+  reserve: '/api/vehicle/reserve-event-id', reset: '/api/vehicle/reset',
+  agent: '/api/vehicle/agent', agentScenario: '/api/vehicle/agent/scenario',
+  agentSos: '/api/vehicle/agent/sos', agentSafe: '/api/vehicle/agent/driver-safe',
+};
+
+// ============================ VEHICLE AGENT PANEL ============================
+let AGENT = null;
+let AGENT_CHANNELS = [];
+const PHASE_COLORS = { IDLE:'#5b7285', REVIEW:'#fbbf24', ALERT_SENT:'#f87171', DRIVER_SAFE:'#34d399', ESCALATED:'#f87171' };
+
+function fmtChannel(id, frame) {
+  if (!frame) return '—';
+  if (id === 'gpsSpeedKmh') return frame.gps ? frame.gps.speedKmh + ' km/h' : '—';
+  const v = frame[id];
+  if (typeof v === 'boolean') return v ? 'TRUE' : 'false';
+  return String(v);
+}
+
+function renderAgent(agent, channels) {
+  AGENT = agent;
+  if (channels && channels.length) AGENT_CHANNELS = channels;
+  const frame = agent.latestFrame;
+
+  // ① sensor acquisition table
+  if (frame) {
+    const body = $('ecu-table').querySelector('tbody') || $('ecu-table');
+    body.innerHTML = AGENT_CHANNELS.map((c) => {
+      const v = fmtChannel(c.id, frame);
+      const hot = v === 'TRUE';
+      return '<tr><td style="color:var(--muted)">' + c.label + '</td><td class="mono">' + v + '</td><td style="color:var(--muted)">' +
+        (c.unit || '—') + '</td><td><span style="font-size:9px;padding:1px 5px;border-radius:4px;background:' +
+        (c.source === 'CAN' ? 'rgba(14,125,139,.2);color:#67e8f9' : c.source === 'GNSS' ? 'rgba(52,211,153,.15);color:#34d399' : 'rgba(251,191,36,.15);color:#fbbf24') +
+        '">' + c.source + '</span></td></tr>';
+    }).join('');
+  }
+  $('agent-phase').textContent = agent.phase;
+  $('agent-phase').style.color = PHASE_COLORS[agent.phase] || 'var(--cyan)';
+  $('agent-fps').textContent = agent.framesPerSecond;
+  $('agent-window').textContent = (agent.evidence ? agent.evidence.windowFrames : 0) + ' frames';
+  const tx = agent.lastTransmit;
+  $('agent-tx').innerHTML = tx ? '<span style="color:' + (tx.ok ? '#34d399' : '#f87171') + '">' + (tx.ok ? '✓' : '✗') + ' ' + tx.endpoint + '</span>' : '—';
+
+  // ② confidence panel
+  const conf = agent.confidence;
+  if (conf) {
+    $('conf-score').textContent = conf.confidence;
+    $('conf-level').innerHTML = conf.level + '<br/>' + (conf.alert ? 'ALERT' : 'no alert');
+    const ring = $('conf-ring');
+    ring.style.borderColor = conf.level === 'CONFIRMED' ? '#ef4444' : conf.level === 'REVIEW' ? '#f59e0b' : '#2d4050';
+    ring.style.boxShadow = conf.alert ? '0 0 18px rgba(239,68,68,.45)' : 'none';
+    $('conf-reason').textContent = conf.reason;
+    $('conf-gate').textContent = 'family gate: ' + conf.familyGate.detail;
+    const tbody = $('conf-table').querySelector('tbody');
+    tbody.innerHTML = conf.indicators.map((i) => {
+      const dot = i.seen ? '<span style="color:' + (i.discounted ? '#f59e0b' : '#f87171') + '">●</span>' : '<span style="color:#334155">○</span>';
+      const disc = i.discounted ? '<div style="color:#f59e0b;font-size:9px;margin-top:2px">⚠ ' + i.discounted + '</div>' : '';
+      return '<tr><td>' + dot + ' ' + i.label + disc + '</td><td class="mono">' + i.value + '</td><td style="color:var(--muted)">' + i.threshold + '</td><td class="mono">' + (i.points ? '+' + i.points : '0') + '</td></tr>';
+    }).join('');
+  }
+
+  // flow strip
+  const set = (id, cls, text) => { const el = $(id); el.className = 'fstep' + (cls ? ' ' + cls : ''); if (text) el.textContent = text; };
+  set('fc-1', 'on');
+  set('fc-2', conf ? (conf.level === 'CONFIRMED' ? 'danger' : conf.level === 'REVIEW' ? 'warn' : 'on') : '');
+  const alerting = agent.phase === 'ALERT_SENT' || agent.phase === 'ESCALATED';
+  set('fc-3', alerting ? 'danger' : '', '③ APP ALERT' + (alerting ? ' · SENT' : ''));
+  const secs = agent.windowSecondsLeft;
+  set('fc-4', agent.phase === 'ALERT_SENT' ? 'warn' : '', '④ 30s TIMER' + (agent.phase === 'ALERT_SENT' && secs !== null ? ' — ' + secs + 's' : ''));
+  set('fc-5', agent.phase === 'ALERT_SENT' ? 'warn' : alerting ? 'on' : '');
+  set('fc-6', agent.phase === 'DRIVER_SAFE' ? 'good' : '');
+  set('fc-7', agent.phase === 'ESCALATED' ? 'danger' : '');
+  ['fc-8','fc-9','fc-10'].forEach((id) => set(id, agent.phase === 'ESCALATED' ? 'danger' : agent.phase === 'DRIVER_SAFE' ? '' : ''));
+  set('fc-11', agent.phase === 'ESCALATED' ? 'warn' : '');
+  set('fc-12', agent.phase === 'ESCALATED' ? 'good' : agent.phase === 'DRIVER_SAFE' ? 'good' : '', agent.phase === 'DRIVER_SAFE' ? '⑩ INCIDENT CLOSED (FALSE ALARM)' : '⑩ INCIDENT CLOSED');
+
+  // HMI buttons
+  $('btn-agent-safe').disabled = agent.phase !== 'ALERT_SENT';
+  document.querySelectorAll('#scenario-row [data-scenario]').forEach((b) => {
+    b.style.opacity = b.dataset.scenario === agent.scenario ? '1' : '.55';
+    b.style.outline = b.dataset.scenario === agent.scenario ? '2px solid var(--cyan)' : 'none';
+  });
+}
+
+async function pollAgent() {
+  try {
+    const res = await fetch(API.agent);
+    const data = await res.json();
+    renderAgent(data.agent, data.channels);
+  } catch { /* bridge unreachable — health banner already covers it */ }
+}
+
+async function setScenario(scenario) {
+  try {
+    const res = await fetch(API.agentScenario, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ scenario }) });
+    const data = await res.json();
+    if (data.agent) renderAgent(data.agent, null);
+    addLog('ECU scenario → ' + scenario + ' (sensor bus now feeds this driving condition)');
+  } catch { addLog('Failed to set ECU scenario', 'warn'); }
+}
+
+function wireAgentControls() {
+  document.querySelectorAll('#scenario-row [data-scenario]').forEach((btn) => {
+    btn.addEventListener('click', () => setScenario(btn.dataset.scenario));
+  });
+  $('btn-agent-sos').addEventListener('click', async () => {
+    try {
+      const res = await fetch(API.agentSos, { method: 'POST' });
+      const data = await res.json();
+      if (data.agent) renderAgent(data.agent, null);
+      addLog('DRIVER SOS — agent bypasses confidence check, alert transmitted to cloud', 'critical');
+    } catch { addLog('SOS transmit failed', 'warn'); }
+  });
+  $('btn-agent-safe').addEventListener('click', async () => {
+    try {
+      const res = await fetch(API.agentSafe, { method: 'POST' });
+      const data = await res.json();
+      if (data.agent) renderAgent(data.agent, null);
+      addLog('Driver pressed I\'M SAFE inside the window — incident cancelled', 'success');
+    } catch { addLog('Driver-safe transmit failed', 'warn'); }
+  });
+}
+
+function hhmmss(d = new Date()) {
+  return d.toTimeString().slice(0, 8);
+}
+
+// Mirrors the server engine (src/risk.ts): rules are looked up by id, which
+// must match the camelCase keys of the risk objects in the accident steps.
+function calcRisk(input) {
+  let score = 0; const applied = [];
+  for (const rule of SPEC.riskRules) {
+    if (input[rule.id]) { score += rule.weight; applied.push(rule); }
+  }
+  score = Math.max(0, Math.min(100, score));
+  const category = score >= 75 ? 'CRITICAL' : score >= 50 ? 'HIGH' : score >= 25 ? 'MEDIUM' : 'LOW';
+  return { score, category, applied };
+}
+
+// Build a packet exactly like the vehicle telematics unit would serialize it.
+function buildPacket(o) {
+  const risk = calcRisk(o.risk || {});
+  return {
+    packetId: 'PKT-' + String(++packetSeq).padStart(4, '0'),
+    eventType: o.eventType,
+    vehicleId: SPEC.vehicle.id,
+    timestamp: new Date().toISOString(),
+    location: { latitude: SPEC.location.latitude, longitude: SPEC.location.longitude,
+      simulated: true, label: SPEC.location.label },
+    vehicle: { speedKmh: o.speedKmh, acceleration: o.acceleration, deceleration: o.deceleration,
+      heading: o.heading, status: o.status, ignition: o.ignition || 'ON' },
+    signals: { crashSignal: false, impactDetected: false, sos: false, abnormalOrientation: false,
+      unexpectedStop: false, ...(o.signals || {}) },
+    driver: { response: o.driverResponse || 'OK' },
+    risk: { score: risk.score, category: risk.category,
+      factors: risk.applied.map((r) => r.label + ' (+' + r.weight + ')'), model: SPEC.riskModelLabel },
+    ...(o.relatedEventId ? { relatedEventId: o.relatedEventId } : {}),
+  };
+}
+
+// ------------------------------- rendering -----------------------------------
+function renderPacketUI(p) {
+  $('g-speed').textContent = p.vehicle.speedKmh;
+  $('g-acc').textContent = p.vehicle.acceleration;
+  $('g-dec').textContent = p.vehicle.deceleration;
+  $('g-dec').className = 'n' + (p.vehicle.deceleration >= 6 ? ' hot' : p.vehicle.deceleration >= 3 ? ' warm' : '');
+  $('g-speed').className = 'n' + (p.vehicle.speedKmh === 0 && p.signals.impactDetected ? ' hot' : '');
+  $('g-impact').textContent = p.signals.impactDetected ? 'YES' : 'NO';
+  $('g-impact').className = 'n' + (p.signals.impactDetected ? ' hot' : '');
+  $('g-crash').textContent = p.signals.crashSignal ? 'TRUE' : 'FALSE';
+  $('g-crash').className = 'n' + (p.signals.crashSignal ? ' hot' : '');
+  $('g-sos').textContent = p.signals.sos ? 'TRUE' : 'FALSE';
+  $('g-sos').className = 'n' + (p.signals.sos ? ' hot' : '');
+  $('v-status').textContent = p.vehicle.status;
+  $('v-ign').textContent = p.vehicle.ignition;
+  $('v-sos').textContent = p.signals.sos ? 'ACTIVE' : 'INACTIVE';
+  $('v-head').textContent = p.vehicle.heading + '°';
+  $('risk-score').textContent = p.risk.score;
+  const ring = $('risk-ring');
+  ring.style.borderColor = RISK_COLORS[p.risk.category];
+  ring.querySelector('.c').innerHTML = '0–100<br/>' + p.risk.category;
+  $('risk-factors').innerHTML = SPEC.riskRules.map((r) => {
+    const on = p.risk.factors.some((f) => f.startsWith(r.label));
+    return '<div class="factor' + (on ? ' applied' : '') + '"><span>' + (on ? '● ' : '○ ') + r.label +
+      '</span><span>+' + r.weight + '</span></div>';
+  }).join('');
+  $('packet-json').textContent = JSON.stringify(p, null, 2);
+  lastPacket = p;
+  const body = $('stream-body');
+  if (body.querySelector('td[colspan]')) body.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + hhmmss(new Date(p.timestamp)) + '</td><td>' + p.packetId + '</td><td>' +
+    p.eventType + '</td><td>' + p.vehicle.speedKmh + '</td><td>' + p.vehicle.deceleration + '</td><td>' +
+    (p.signals.crashSignal ? 'TRUE' : 'false') + '</td><td>' + p.risk.score + ' ' + p.risk.category +
+    '</td><td>200 OK</td>';
+  body.prepend(tr);
+  while (body.rows.length > 9) body.deleteRow(-1);
+}
+
+function addLog(message, level) {
+  const div = document.createElement('div');
+  div.className = 'evt ' + (level || 'info');
+  div.innerHTML = '<span class="time">' + hhmmss() + '</span><span>' + message + '</span>';
+  const log = $('event-log');
+  log.prepend(div);
+  while (log.children.length > 30) log.removeChild(log.lastChild);
+}
+
+function pipeline(stage) { // 1..5 or 0 to dim all
+  ['ph-gen','ph-tx','ph-ack','ph-evt','ph-sse'].forEach((id, i) => $(id).classList.toggle('on', i < stage));
+}
+// ------------------------- REAL HTTP TRANSMISSION ----------------------------
+async function postTelemetry(packet) {
+  pipeline(1);
+  $('pd-gen').textContent = packet.packetId + ' · ' + packet.eventType + ' · serialized ' +
+    new Blob([JSON.stringify(packet)]).size + ' bytes';
+  $('pd-tx').textContent = 'POST ' + location.origin + API.telemetry;
+  pipeline(2);
+  addLog(packet.eventType + ' · packet ' + packet.packetId + ' → transmitting to bridge');
+  try {
+    const res = await fetch(API.telemetry, { method: 'POST',
+      headers: { 'content-type': 'application/json' }, body: JSON.stringify({ packet }) });
+    const ack = await res.json();
+    $('pd-ack').textContent = 'HTTP ' + res.status + ' ' + res.statusText + ' · latency ' +
+      ack.latencyMs + 'ms · bridge ack ' + ack.receivedAt;
+    pipeline(3);
+    addLog('BRIDGE ACK · HTTP ' + res.status + ' · packet ' + packet.packetId + ' received (' +
+      ack.latencyMs + 'ms)', res.ok ? 'success' : 'warn');
+    return ack;
+  } catch (err) {
+    showConnection(false);
+    addLog('TRANSMISSION FAILED · ' + err.message, 'warn');
+    return null;
+  }
+}
+
+async function postAccident(packet) {
+  pipeline(1);
+  $('pd-gen').textContent = packet.packetId + ' · ' + packet.eventType + ' · risk ' +
+    packet.risk.score + '/100 · serialized ' + new Blob([JSON.stringify(packet)]).size + ' bytes';
+  $('pd-tx').textContent = 'POST ' + location.origin + API.accident;
+  pipeline(2);
+  addLog(packet.eventType + ' · packet ' + packet.packetId + ' → transmitting EMERGENCY event');
+  try {
+    const res = await fetch(API.accident, { method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ eventId: pendingEventId, packet }) });
+    const ack = await res.json();
+    $('pd-ack').textContent = 'HTTP ' + res.status + ' ' + res.statusText + ' · latency ' +
+      ack.latencyMs + 'ms · ack ' + ack.receivedAt;
+    $('pd-evt').textContent = 'EVENT ' + ack.eventId + ' · lifecycle ' + ack.lifecycle +
+      ' · risk ' + packet.risk.score + '/100';
+    $('pd-evt').closest('.stage').classList.add('on');
+    addLog('RAKSHA SETU ACKNOWLEDGED · EVENT ' + ack.eventId + ' created (HTTP ' + res.status + ', ' +
+      ack.latencyMs + 'ms)', 'critical');
+    if (ack.rakshaSetuForward) {
+      addLog('FORWARD → existing api-server: ' + ack.rakshaSetuForward.httpStatus + ' · ' +
+        ack.rakshaSetuForward.note, ack.rakshaSetuForward.ok ? 'success' : 'warn');
+    }
+    pipeline(5);
+    return ack;
+  } catch (err) {
+    showConnection(false);
+    addLog('EMERGENCY TRANSMISSION FAILED · ' + err.message, 'warn');
+    return null;
+  }
+}
+
+// --------------------------- DETERMINISTIC ACCIDENT --------------------------
+function simulateAccident() {
+  if (accidentRunning || !SPEC) return;
+  accidentRunning = true; driverResponded = false; pendingEventId = null;
+  stopNormalDrive();
+  ['btn-accident','btn-test','btn-sos','btn-drive'].forEach((id) => $(id).disabled = true);
+  $('btn-safe').disabled = false;
+  pipeline(0);
+  addLog('ACCIDENT SIMULATION STARTED · deterministic T0→T6 sequence', 'warn');
+
+  for (const step of SPEC.accidentSequence) {
+    accidentTimers.push(setTimeout(async () => {
+      if (step.eventType === 'DRIVER_NO_RESPONSE') {
+        if (driverResponded || !pendingEventId) return; // driver already answered
+        const pkt = buildPacket({ eventType: step.eventType, ...step, relatedEventId: pendingEventId });
+        renderPacketUI(pkt);
+        addLog('T6 · DRIVER NO RESPONSE — escalation flag raised', 'critical');
+        await postTelemetry(pkt);
+        return;
+      }
+      const pkt = buildPacket({ eventType: step.eventType, ...step });
+      renderPacketUI(pkt);
+      addLog(step.log, step.createsEvent ? 'critical' : step.atMs === 0 ? 'info' : 'warn');
+      if (step.createsEvent) {
+        try {
+          const r = await fetch(API.reserve, { method: 'POST' });
+          pendingEventId = (await r.json()).eventId;
+        } catch { showConnection(false); return; }
+        await postAccident(pkt);
+        $('btn-safe').disabled = false;
+      } else {
+        await postTelemetry(pkt);
+      }
+    }, step.atMs));
+  }
+}
+async function driverSafe() {
+  if (!pendingEventId || driverResponded) return;
+  driverResponded = true;
+  $('btn-safe').disabled = true;
+  const step = SPEC.accidentSequence[SPEC.accidentSequence.length - 1];
+  const pkt = buildPacket({ eventType: 'DRIVER_SAFE', ...step, driverResponse: 'OK',
+    risk: { ...step.risk, driverNoResponse: false }, relatedEventId: pendingEventId });
+  renderPacketUI(pkt);
+  addLog('DRIVER RESPONSE: "I AM SAFE" — verification answered, escalation cancelled', 'success');
+  await postTelemetry(pkt);
+}
+
+async function manualSos() {
+  if (accidentRunning) return;
+  try {
+    const r = await fetch(API.reserve, { method: 'POST' });
+    pendingEventId = (await r.json()).eventId;
+  } catch { showConnection(false); return; }
+  const pkt = buildPacket({ eventType: 'MANUAL_SOS', speedKmh: lastPacket?.vehicle.speedKmh ?? 62,
+    acceleration: 0.2, deceleration: 0.3, heading: 142, status: 'NORMAL',
+    signals: { sos: true, crashSignal: true }, risk: { manualSos: true } });
+  renderPacketUI(pkt);
+  addLog('MANUAL SOS pressed — crash signal + SOS TRUE', 'critical');
+  await postAccident(pkt);
+}
+
+// ------------------------------ NORMAL DRIVE ---------------------------------
+function startNormalDrive() {
+  if (normalTimer || !SPEC) return;
+  const base = SPEC.baseline;
+  const tick = async () => {
+    const pkt = buildPacket({ eventType: 'NORMAL_TELEMETRY', ...base, status: 'NORMAL' });
+    renderPacketUI(pkt);
+    await postTelemetry(pkt);
+  };
+  tick();
+  normalTimer = setInterval(tick, SPEC.normalTelemetryIntervalMs);
+  addLog('NORMAL DRIVE started · telemetry every ' + SPEC.normalTelemetryIntervalMs + 'ms');
+}
+
+function stopNormalDrive() {
+  if (normalTimer) { clearInterval(normalTimer); normalTimer = null; }
+}
+
+// --------------------------------- RESET -------------------------------------
+async function resetDemo() {
+  accidentTimers.forEach(clearTimeout); accidentTimers = [];
+  stopNormalDrive();
+  accidentRunning = false; driverResponded = false; pendingEventId = null; packetSeq = 0;
+  try { await fetch(API.reset, { method: 'POST' }); } catch { showConnection(false); }
+  pipeline(0);
+  ['pd-gen','pd-tx','pd-ack','pd-evt','pd-sse'].forEach((id) => $(id).textContent = '—');
+  $('event-log').innerHTML = '';
+  $('stream-body').innerHTML = '<tr><td colspan="8" style="color:var(--muted)">No telemetry — press START NORMAL DRIVE.</td></tr>';
+  $('btn-safe').disabled = true;
+  ['btn-accident','btn-test','btn-sos','btn-drive'].forEach((id) => $(id).disabled = false);
+  addLog('RESET DEMO · vehicle NORMAL · risk 0 · event log cleared', 'success');
+  startNormalDrive();
+}
+
+// ------------------------------ CONNECTION UI --------------------------------
+let connFailures = 0;
+function showConnection(ok, data) {
+  $('dot-bridge').className = 'dot ' + (ok ? 'ok' : 'bad');
+  $('st-bridge').textContent = ok ? 'CONNECTED' : 'DISCONNECTED';
+  $('fail-banner').classList.toggle('show', !ok);
+  if (ok && data) {
+    $('dot-app').className = 'dot ' + (data.rakshaSetuApp === 'CONNECTED' ? 'ok' : 'wait');
+    $('st-app').textContent = data.rakshaSetuApp === 'CONNECTED'
+      ? 'CONNECTED · ' + data.appUrl.replace('http://', '') : 'WAITING (start the app)';
+    $('dot-api').className = 'dot ' + (data.rakshaSetuApi === 'CONNECTED' ? 'ok' : 'wait');
+    $('st-api').textContent = data.rakshaSetuApi === 'CONNECTED'
+      ? 'CONNECTED · ' + data.apiUrl.replace('http://', '') : 'WAITING (optional)';
+    $('pd-sse').textContent = 'Receiver dashboards notified via SSE · ' + data.sseClients + ' watching';
+  }
+}
+
+async function pollHealth() {
+  try {
+    const res = await fetch(API.health);
+    const data = await res.json();
+    connFailures = 0;
+    showConnection(data.bridge === 'CONNECTED', data);
+  } catch {
+    if (++connFailures >= 2) showConnection(false);
+  }
+}
+
+// ---------------------------------- INIT -------------------------------------
+async function init() {
+  try {
+    SPEC = await (await fetch(API.spec)).json();
+  } catch {
+    showConnection(false);
+    return;
+  }
+  $('v-id').textContent = SPEC.vehicle.id;
+  $('v-driver').textContent = SPEC.vehicle.driver;
+  $('v-model').textContent = SPEC.vehicle.model;
+  $('v-tel').textContent = SPEC.vehicle.telematicsUnit;
+  $('v-loc').textContent = SPEC.location.latitude + ', ' + SPEC.location.longitude;
+  $('cadence').textContent = SPEC.normalTelemetryIntervalMs + 'ms';
+  $('c1-name').textContent = SPEC.contacts.primary.name;
+  $('c1-rel').textContent = SPEC.contacts.primary.relation + ' · ' + SPEC.contacts.primary.phone;
+  $('c2-name').textContent = SPEC.contacts.secondary.name;
+  $('c2-rel').textContent = SPEC.contacts.secondary.relation + ' · ' + SPEC.contacts.secondary.phone;
+
+  $('btn-drive').onclick = () => { startNormalDrive(); };
+  $('btn-accident').onclick = simulateAccident;
+  $('btn-test').onclick = async () => {
+    const base = SPEC.baseline;
+    const pkt = buildPacket({ eventType: 'TEST_TELEMETRY', ...base, status: 'NORMAL' });
+    renderPacketUI(pkt);
+    addLog('TEST TELEMETRY packet generated and transmitted');
+    await postTelemetry(pkt);
+  };
+  $('btn-sos').onclick = manualSos;
+  $('btn-safe').onclick = driverSafe;
+  $('btn-reset').onclick = resetDemo;
+  $('btn-retry').onclick = pollHealth;
+  $('btn-retry2').onclick = pollHealth;
+  wireAgentControls();
+
+  pollHealth();
+  setInterval(pollHealth, 4000);
+  pollAgent();
+  setInterval(pollAgent, 500);
+  startNormalDrive();
+  addLog('Vehicle Integration Simulator ready · vehicle ' + SPEC.vehicle.id + ' · SIMULATED data only');
+}
+init();
+
+
+</script>
+
+
+
+</body>
+</html>

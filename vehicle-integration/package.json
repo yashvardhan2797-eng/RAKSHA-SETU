@@ -1,0 +1,18 @@
+{
+  "name": "raksha-setu-vehicle-integration",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ISOLATED demo component: vehicle-side telemetry/accident simulator + local integration bridge for the existing RAKSHA SETU application. Zero runtime dependencies — runs on Node >= 24 via native TypeScript type-stripping.",
+  "scripts": {
+    "dev": "node src/server.ts",
+    "start": "node src/server.ts"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.20.2"
+  }
+}

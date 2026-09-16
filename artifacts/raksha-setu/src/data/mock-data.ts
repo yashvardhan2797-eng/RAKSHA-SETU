@@ -1,6 +1,31 @@
 export type Severity = 'Critical' | 'High' | 'Medium' | 'Low';
 export type IncidentStatus = 'Responding' | 'Verification' | 'Monitoring' | 'Escalated' | 'Resolved' | 'Cancelled';
 
+/** Registered owner profile shown to responders at a crash scene. */
+export type EmergencyContact = {
+  id: string;
+  name: string;
+  relation: string;
+  phone: string;
+  isPrimary: boolean;
+};
+
+export type PersonalInfo = {
+  fullName: string;
+  address: string;
+  bloodGroup: string;
+  /** Known medical conditions — empty string when none declared. */
+  disease: string;
+  /** Regular medication — empty string when none declared. */
+  medication: string;
+  gender: 'Male' | 'Female' | 'Other';
+  age: number;
+  /** Registered emergency contacts notified on crash (multiple allowed). */
+  emergencyContacts: EmergencyContact[];
+  /** Per-incident dispatch log: who was notified and how it went. */
+  notificationLog?: Array<{ incidentCode: string; contactId: string; contactName: string; phone: string; status: 'sent' | 'simulated' | 'failed' | 'queued'; at: string }>;
+}
+
 export type IncidentTimeline = { title: string; time: string; detail: string };
 
 export type Incident = {
@@ -29,6 +54,16 @@ export type Incident = {
   nearestHospital?: string;
   riskFactors?: string[];
   timeline?: IncidentTimeline[];
+  /** Registered-owner medical/identity profile surfaced at the crash scene. */
+  owner?: PersonalInfo;
+  /** Database id from the RAKSHA SETU api-server (when the event was forwarded). */
+  rakshaIncidentId?: number;
+  /** Per-contact dispatch log for this incident (who was SMS-notified). */
+  contactNotifications?: Array<{ contactName: string; phone: string; status: 'sent' | 'simulated' | 'failed' | 'queued'; at: string }>;
+  /** While set, the incident is inside its false-alarm cancellation window and can still be cancelled. */
+  cancelDeadline?: string;
+  /** True once the driver used the cancellation window to flag a false alarm. */
+  cancelledAsFalseAlarm?: boolean;
 };
 
 export type Vehicle = {
@@ -111,6 +146,37 @@ export type ResponseTeam = {
   readiness: number;
 };
 
+/**
+ * Demo login accounts. Any registered email + password combination works in the
+ * demo (no backend) — profiles are matched by email for the Personal Info page.
+ */
+export type LoginUser = {
+  email: string;
+  password: string;
+  displayName: string;
+  role: 'Administrator' | 'Responder';
+};
+
+export const loginUsers: LoginUser[] = [
+  { email: 'admin@rakshasetu.in', password: 'raksha123', displayName: 'Control Center Admin', role: 'Administrator' },
+  { email: 'responder@rakshasetu.in', password: 'rescue123', displayName: 'Field Responder', role: 'Responder' },
+];
+
+/** Seed profile of the registered vehicle owner used across demo incidents. */
+export const demoOwner: PersonalInfo = {
+  fullName: 'Raj Sharma',
+  address: 'B-42, Ashok Nagar, Jaipur, Rajasthan 302001',
+  bloodGroup: 'B+',
+  disease: 'Mild asthma',
+  medication: 'Salbutamol inhaler (as needed)',
+  gender: 'Male',
+  age: 34,
+  emergencyContacts: [
+    { id: 'EC-1', name: 'Meera Sharma', relation: 'Wife', phone: '+91 98••• 7712', isPrimary: true },
+    { id: 'EC-2', name: 'Vikram Sharma', relation: 'Brother', phone: '+91 97••• 3348', isPrimary: false },
+  ],
+};
+
 export const incidents: Incident[] = [
   {
     id: 'INC-2041', code: 'INC-2041', type: 'Possible crash', severity: 'Critical', status: 'Responding',
@@ -120,6 +186,7 @@ export const incidents: Incident[] = [
     detectionTime: '19:32:10', assignedTeam: 'Team Alpha', latitude: '26.9124', longitude: '75.7873',
     nearestAmbulance: 'AMB-108', nearestHospital: 'City Emergency Hospital',
     riskFactors: ['Sudden deceleration', 'Abnormal vehicle orientation', 'No driver response', 'Vehicle stationary'],
+    owner: demoOwner,
     timeline: [
       { time: '19:32:10', title: 'Crash detected', detail: 'Crash Detection System signal received' },
       { time: '19:32:14', title: 'GPS location captured', detail: '26.9124, 75.7873' },
