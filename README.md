@@ -37,25 +37,3 @@ pnpm apk-server
 
 Web app demo login: admin@rakshasetu.in / raksha123
 
-
-
-
-Crash pipeline (demo flow)
-             @ ECU/CAN + OEM T-Box + GNSS (10 Hz)
-             @ On-board crash-confidence check (3 sensor families, 2-of-3 gate, false-positive guards)
-             @ Confidence ≥ 75 → alert preserved & transmitted to cloud
-             @ 30-second driver window → “I AM SAFE” + cancel cloud-side
-             @ If no response → escalate (contacts + control center)
-             @ Incident lifecycle tracked in cloud + dashboards (SSE) → Android apps
-
-
-Docs
-APK-INSTALL.md — install the Android apps (public links, file share, LAN)
-DEPLOYMENT.md — architecture, deployment, SMS wiring, legal roadmap
-#freebuff/full.md — preview/dev-server runbook
-Verified physics
-
-The Crash Lab reproduces the reference case dynamically (never hard-coded): 1500 kg, 80–60 km/h, 0.15 s → ΔV 5.56 m/s · 370 g · 3.78 g · 55.6 kN estimated average impact force.
-         
-                       **One thing to flag:** the screenshot text is quite small, so a few characters in the first table/Crash Pipeline lines are difficult to distinguish with absolute certainty. I have kept the transcription as close to the visible README as possible rather than silently rewriting it.
-
