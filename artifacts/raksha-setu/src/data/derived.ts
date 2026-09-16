@@ -64,7 +64,7 @@ export function responseMinutesFromHistory(history: { responseTime: string; date
 /** Deterministic 7-day severity distribution from history + live state. */
 export function severityMix(incidents: Incident[], history: { severity: string }[]) {
   const levels = ['Critical', 'High', 'Medium', 'Low'] as const;
-  const colors = { Critical: '#ff5c5c', High: '#ff9c43', Medium: '#ffc657', Low: '#53dcf7' } as const;
+  const colors = { Critical: '#ff5c5c', High: '#ff9c43', Medium: '#ffc657', Low: '#f08a3e' } as const;
   return levels.map((level) => {
     const live = incidents.filter((incident) => incident.severity === level).length;
     const past = history.filter((item) => item.severity === level).length;
@@ -76,7 +76,7 @@ export function severityMix(incidents: Incident[], history: { severity: string }
 export function typeMix(history: { type: string }[], top = 6) {
   const counts = new Map<string, number>();
   for (const item of history) counts.set(item.type, (counts.get(item.type) ?? 0) + 1);
-  const colors = ['#53dcf7', '#ffc657', '#ff5c5c', '#4ade80', '#c4b5fd', '#ff9c43'];
+  const colors = ['#f08a3e', '#ffc657', '#ff5c5c', '#4ade80', '#c4b5fd', '#ff9c43'];
   return [...counts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, top)
@@ -90,7 +90,7 @@ export function zoneLoad(incidents: Incident[]) {
     const zone = incident.location.split(',')[0].trim();
     counts.set(zone, (counts.get(zone) ?? 0) + 1);
   }
-  const colors = ['#ff5c5c', '#ff9c43', '#ffc657', '#53dcf7', '#4ade80', '#c4b5fd'];
+  const colors = ['#ff5c5c', '#ff9c43', '#ffc657', '#f08a3e', '#4ade80', '#c4b5fd'];
   return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([label, value], index) => ({ label, value, color: colors[index % colors.length] }));
 }
 

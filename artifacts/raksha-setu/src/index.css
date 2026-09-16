@@ -22,14 +22,14 @@
   --color-slate-800: #eef3fa;
   --color-slate-900: #f6f9fd;
   --color-slate-950: #04070d;
-  --color-cyan-50: rgba(77, 216, 245, 0.09);
-  --color-cyan-100: rgba(77, 216, 245, 0.14);
-  --color-cyan-200: rgba(77, 216, 245, 0.28);
-  --color-cyan-300: rgba(96, 224, 248, 0.45);
-  --color-cyan-500: #22c8e8;
-  --color-cyan-600: #38d9f0;
-  --color-cyan-700: #53dcf7;
-  --color-cyan-800: #7ce5f9;
+  --color-cyan-50: rgba(232, 114, 20, 0.1);
+  --color-cyan-100: rgba(232, 114, 20, 0.16);
+  --color-cyan-200: rgba(232, 114, 20, 0.3);
+  --color-cyan-300: rgba(240, 138, 62, 0.45);
+  --color-cyan-500: #e8720c;
+  --color-cyan-600: #d96a12;
+  --color-cyan-700: #f08a3e;
+  --color-cyan-800: #f6a663;
   --color-red-50: rgba(255, 96, 96, 0.1);
   --color-red-100: rgba(255, 96, 96, 0.16);
   --color-red-200: rgba(255, 110, 110, 0.3);
@@ -104,15 +104,15 @@
   --foreground: 213 25% 92%;
   --border: 216 28% 16%;
   --input: 216 28% 18%;
-  --ring: 190 90% 55%;
+  --ring: 24 92% 52%;
   --card: 217 34% 10%;
   --card-foreground: 213 25% 92%;
   --card-border: 216 28% 17%;
   --popover: 217 34% 10%;
   --popover-foreground: 213 25% 92%;
   --popover-border: 216 28% 18%;
-  --primary: 190 90% 48%;
-  --primary-foreground: 216 40% 6%;
+  --primary: 24 92% 47%;
+  --primary-foreground: 0 0% 100%;
   --secondary: 216 26% 16%;
   --secondary-foreground: 213 22% 88%;
   --muted: 216 26% 14%;
@@ -121,7 +121,7 @@
   --accent-foreground: 36 45% 12%;
   --destructive: 3 75% 55%;
   --destructive-foreground: 0 0% 100%;
-  --chart-1: 190 90% 55%;
+  --chart-1: 24 92% 55%;
   --chart-2: 43 91% 58%;
   --chart-3: 146 55% 52%;
   --chart-4: 3 80% 60%;
@@ -133,11 +133,11 @@
   --sidebar-primary-foreground: 36 45% 12%;
   --sidebar-accent: 216 30% 14%;
   --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-ring: 190 90% 55%;
+  --sidebar-ring: 24 92% 52%;
   --app-font-sans: 'Manrope', sans-serif;
   --app-font-mono: 'DM Mono', monospace;
   --radius: 0.65rem;
-  --primary-border: hsl(190 90% 40%);
+  --primary-border: hsl(24 92% 40%);
   --secondary-border: hsl(216 26% 22%);
   --muted-border: hsl(216 26% 20%);
   --accent-border: hsl(43 76% 48%);
@@ -219,17 +219,17 @@ html { background: hsl(var(--background)); }
 /* ——— Mission-control accents ——— */
 body {
   background:
-    radial-gradient(1100px 500px at 85% -10%, rgba(34, 200, 232, 0.07), transparent 60%),
-    radial-gradient(900px 420px at -10% 110%, rgba(77, 220, 247, 0.05), transparent 55%),
+    radial-gradient(1100px 500px at 85% -10%, rgba(232, 114, 20, 0.07), transparent 60%),
+    radial-gradient(900px 420px at -10% 110%, rgba(240, 138, 62, 0.05), transparent 55%),
     hsl(var(--background));
 }
 
-.bg-\[\#d9e9eb\] { background-color: #14313c; }
+.bg-\[\#d9e9eb\] { background-color: #3a2413; }
 .bg-\[\#f2f5f7\] { background-color: #0c1420; }
 
 .grid-noise {
   background-image:
-    linear-gradient(rgba(77, 216, 245, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(77, 216, 245, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(232, 114, 20, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 114, 20, 0.05) 1px, transparent 1px);
   background-size: 34px 34px;
 }

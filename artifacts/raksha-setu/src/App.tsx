@@ -128,11 +128,11 @@ function StatusBadge({ label, tone }: { label: string; tone?: string }) {
 
 function MetricCard({ label, value, detail, icon: IconComponent, accent = 'teal', trend, spark }: { label: string; value: string; detail: string; icon: Icon; accent?: string; trend?: 'up' | 'down'; spark?: number[] }) {
   const colors: Record<string, string> = { teal: 'bg-cyan-50 text-cyan-700', amber: 'bg-amber-50 text-amber-700', red: 'bg-red-50 text-red-700', blue: 'bg-blue-50 text-blue-700' };
-  const sparks: Record<string, string> = { teal: '#53dcf7', amber: '#ffc657', red: '#ff5c5c', blue: '#7cb3ff' };
+  const sparks: Record<string, string> = { teal: '#f08a3e', amber: '#ffc657', red: '#ff5c5c', blue: '#f08a3e' };
   return <div data-testid={`metric-${label.toLowerCase().replace(/\s/g, '-')}`} className="relative overflow-hidden rounded-xl border border-slate-200 bg-card p-4">
     <div className="flex items-start justify-between"><div className={cn('flex h-9 w-9 items-center justify-center rounded-lg', colors[accent])}><IconComponent size={17} /></div>{trend && <span className={cn('flex items-center gap-0.5 text-[11px] font-bold', trend === 'up' ? 'text-emerald-600' : 'text-orange-600')}>{trend === 'up' ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />} {trend === 'up' ? 'vs yesterday' : 'requires attention'}</span>}</div>
     <p className="mt-4 text-[11px] font-bold uppercase tracking-[.1em] text-slate-500">{label}</p><p className="mt-1 font-mono text-2xl font-medium tracking-tight text-slate-800">{value}</p><p className="mt-1 text-xs text-slate-500">{detail}</p>
-    {spark && spark.length > 1 && <div className="pointer-events-none absolute bottom-0 right-0 opacity-50"><Sparkline values={spark} color={sparks[accent] ?? '#53dcf7'} width={150} height={44} /></div>}
+    {spark && spark.length > 1 && <div className="pointer-events-none absolute bottom-0 right-0 opacity-50"><Sparkline values={spark} color={sparks[accent] ?? '#f08a3e'} width={150} height={44} /></div>}
   </div>;
 }
 
@@ -322,7 +322,7 @@ function Overview({ pushToast }: AppProps) {
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5"><MetricCard label="Active Incidents" value={active.length.toString().padStart(2, '0')} detail="+2 today" icon={Siren} accent="red" trend="up" spark={kpiSpark(incidents, 'incidents')} /><MetricCard label="Critical Incidents" value={critical.length.toString().padStart(2, '0')} detail="Requires immediate response" icon={Zap} accent="red" trend="down" spark={kpiSpark(incidents, 'response')} /><MetricCard label="Vehicles Online" value="124" detail="97% connected" icon={CarFront} accent="blue" trend="up" spark={kpiSpark(incidents, 'fleet')} /><MetricCard label="Response Teams" value="18" detail="15 available" icon={Users} accent="teal" trend="up" spark={kpiSpark(incidents, 'teams')} /><MetricCard label="Average Response Time" value="08:42" detail="-12% this week" icon={Clock3} accent="amber" trend="up" spark={kpiSpark(incidents, 'response')} /></div>
     <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
       <Panel testId="panel-overview-load" eyebrow="Live signal · rolling 24 h" title="Incident load & network risk index">
-        <AreaChart height={210} labels={Array.from({ length: 12 }, (_, index) => `${String((new Date().getHours() - 23 + index * 2 + 24) % 24).padStart(2, '0')}h`)} series={[{ label: 'Incidents detected', values: incidentLoadByRecency(incidents, 24, 12), color: '#ff5c5c' }, { label: 'Network risk index', values: riskIndexSeries(incidents), color: '#53dcf7', area: false, dashed: true }]} />
+        <AreaChart height={210} labels={Array.from({ length: 12 }, (_, index) => `${String((new Date().getHours() - 23 + index * 2 + 24) % 24).padStart(2, '0')}h`)} series={[{ label: 'Incidents detected', values: incidentLoadByRecency(incidents, 24, 12), color: '#ff5c5c' }, { label: 'Network risk index', values: riskIndexSeries(incidents), color: '#f08a3e', area: false, dashed: true }]} />
       </Panel>
       <Panel testId="panel-overview-severity" eyebrow="Distribution · live + archived" title="Severity mix">
         <Donut items={severityMix(incidents, historySeed)} centerLabel={String(severityMix(incidents, historySeed).reduce((sum, item) => sum + item.value, 0))} centerSub="incidents on record" />
@@ -337,7 +337,7 @@ function Overview({ pushToast }: AppProps) {
       </Panel>
       <Panel testId="panel-overview-outcomes" eyebrow="Outcome of the 30-s window" title="Cancellation outcomes">
         <div className="grid grid-cols-2 gap-2">
-          <GaugeRing value={(() => { const online = vehicles.filter((item) => item.status === 'ONLINE').length; return Math.round((online / Math.max(1, vehicles.length)) * 100); })()} label={`${vehicles.filter((item) => item.status === 'ONLINE').length}/${vehicles.length}`} color="#53dcf7" sub="fleet online" />
+          <GaugeRing value={(() => { const online = vehicles.filter((item) => item.status === 'ONLINE').length; return Math.round((online / Math.max(1, vehicles.length)) * 100); })()} label={`${vehicles.filter((item) => item.status === 'ONLINE').length}/${vehicles.length}`} color="#f08a3e" sub="fleet online" />
           <GaugeRing value={Math.round((seedResponseTeams.filter((team) => team.status === 'AVAILABLE').length / Math.max(1, seedResponseTeams.length)) * 100)} label={`${seedResponseTeams.filter((team) => team.status === 'AVAILABLE').length}/${seedResponseTeams.length}`} color="#4ade80" sub="teams ready" />
         </div>
         <div className="mt-3 space-y-2 border-t border-slate-100 pt-3">
@@ -465,7 +465,7 @@ function AnalyticsPage() {
         <AreaChart series={[{ label: 'Incidents', values: analyticsData.incidentsByDay, color: '#ff5c5c' }]} labels={dayLabels} />
       </Panel>
       <Panel testId="panel-analytics-response" eyebrow="Average response time" title="Response time by day">
-        <AreaChart series={[{ label: 'Minutes', values: analyticsData.responseTime, color: '#53dcf7' }]} labels={dayLabels} valueSuffix=" min" />
+        <AreaChart series={[{ label: 'Minutes', values: analyticsData.responseTime, color: '#f08a3e' }]} labels={dayLabels} valueSuffix=" min" />
       </Panel>
       <Panel testId="panel-analytics-severity" eyebrow="Distribution · derived from records" title="Severity mix">
         <RankedBars items={severityMix(incidents, history)} valueSuffix="" />

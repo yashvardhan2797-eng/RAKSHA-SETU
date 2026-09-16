@@ -63,7 +63,7 @@ export function Panel({ eyebrow, title, action, onAction, children, className, t
 }
 
 /** Compact inline trend line for KPI cards. */
-export function Sparkline({ values, color = '#53dcf7', height = 34, width = 120, fill = true }: {
+export function Sparkline({ values, color = '#f08a3e', height = 34, width = 120, fill = true }: {
   values: number[]; color?: string; height?: number; width?: number; fill?: boolean;
 }) {
   const points = toPoints(values, width, height, 5);
@@ -233,7 +233,7 @@ export function Donut({ items, size = 148, thickness = 14, centerLabel, centerSu
 }
 
 /** Radial gauge — normalized 0–100 readouts (risk, readiness, capacity). */
-export function GaugeRing({ value, size = 120, thickness = 10, color = '#53dcf7', label, sub }: {
+export function GaugeRing({ value, size = 120, thickness = 10, color = '#f08a3e', label, sub }: {
   value: number; size?: number; thickness?: number; color?: string; label: string; sub?: string;
 }) {
   const clamped = Math.max(0, Math.min(100, value));
