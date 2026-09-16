@@ -24,7 +24,7 @@ The system is designed to work with existing vehicle ECU/OEM data and sensors th
 | What | URL |
 |---|---|
 | **Web dashboard** (auto-deploys on every push to `main`) | https://yashvardhan2797-eng.github.io/RAKSHA-SETU/ |
-| **User app APK** (v1.2 — Android 7.0+) | https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-user-app.apk |
+| **User app APK** (v1.3 — Android 7.0+) | https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.3/raksha-setu-user-app.apk |
 | **Dashboard app APK** (v1.2 — Android 7.0+) | https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-dashboard.apk |
 | **Releases page** | https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases |
 

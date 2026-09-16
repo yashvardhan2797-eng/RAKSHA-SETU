@@ -4,7 +4,7 @@ Two native Android apps (zero external dependencies, Android 7.0+), both built a
 
 | APK | Who it's for | What it does | Permanent public link |
 |---|---|---|---|
-| **`raksha-setu-user-app.apk`** (37 KB, **v1.2 light UI** — matches the web control center) | **The vehicle user / potential crash victim** | Login → Personal Info (name, age, gender, blood group, diseases, medication, address, GPS, emergency contacts) → big **SOS button** → **30-second cancel window** → incident history | **https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-user-app.apk** |
+| **`raksha-setu-user-app.apk`** (~40 KB, **v1.3 mission-orange UI** — works offline) | **The vehicle user / potential crash victim** | Login → Personal Info (name, age, gender, blood group, diseases, medication, address, GPS, emergency contacts) → big **SOS button** → **30-second cancel window** → incident history — all fully functional **without any server** | **https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.3/raksha-setu-user-app.apk** |
 | **`raksha-setu-dashboard.apk`** (21 KB) | Control-room operator / demo spectator | Live view of ALL incidents across vehicles with risk scores, notified contacts, map links | **https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-dashboard.apk** |
 
 Files also live at:
@@ -45,15 +45,15 @@ Uploaded to a permanent file host — no Wi-Fi, no laptop, no account needed. Sh
 on WhatsApp and anyone, anywhere can install:
 
 ```
-User app      : https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-user-app.apk
+User app      : https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.3/raksha-setu-user-app.apk
 Dashboard app : https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-dashboard.apk
-Release page  : https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/tag/v1.2
+Release page  : https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/tag/v1.3
 ```
 
 GitHub-hosted (never blocked by ISPs, never expires). The gofile/catbox links
 below remain as mirrors.
 
-> **v1.2 note:** if you installed v1.0/v1.1 earlier, Android installs this as an
+> **v1.3 note:** if you installed v1.0/v1.1/v1.2 earlier, Android installs this as an
 > update (same signature) — the app switches from dark-navy to the light
 > web-control-center theme. If the app still looks dark after updating, you're
 > opening an old copy of the file; re-download from the link above.
