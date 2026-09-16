@@ -1,30 +1,34 @@
-🚨 Raksha Setu
-Intelligent Vehicle Accident Detection & Emergency Response Platform
+# 🚨 Raksha Setu
+
+**Intelligent Vehicle Accident Detection & Emergency Response Platform**
 
 Raksha Setu is a software-based vehicle safety platform designed to detect potential accidents from vehicle telemetry, evaluate the severity of an incident, verify the event, and initiate an emergency communication workflow automatically.
 
 The system is designed to work with existing vehicle ECU/OEM data and sensors through an authorized vehicle-data interface. The current prototype uses simulated vehicle telemetry to demonstrate the complete software workflow without requiring additional hardware.
 
-✨ Features
-🚗 Vehicle Telemetry Integration — Designed to receive data from existing vehicle systems through authorized interfaces.
+## ✨ Features
 
-🧠 Accident Detection — Analyzes vehicle parameters to identify potentially dangerous events.
+- 🚗 **Vehicle Telemetry Integration** — designed to receive data from existing vehicle systems through authorized interfaces.
+- 🧠 **Accident Detection** — analyzes vehicle parameters to identify potentially dangerous events.
+- 🤖 **AI-Assisted Verification** — helps distinguish genuine accident events from abnormal but non-critical driving events.
+- ⏱️ **Emergency Verification Window** — provides a short cancellation period before an emergency alert is initiated.
+- 📍 **Location Handling** — supports transmitting available incident-location information.
+- 📡 **Emergency Communication** — designed to communicate incident information to configured emergency contacts/services.
+- 🔄 **Communication Fallback** — supports a fallback communication architecture when the primary channel is unavailable.
+- 📊 **Real-Time Dashboard** — displays vehicle status, detected events, risk level, and emergency workflow status.
+- 🧪 **Vehicle Data Simulator** — allows the complete system to be tested without physical vehicle hardware.
+- 📝 **Incident Logging** — maintains structured information about detected events and response states.
 
-🤖 AI-Assisted Verification — Helps distinguish genuine accident events from abnormal but non-critical driving events.
+## 🌍 Live demo & downloads
 
-⏱️ Emergency Verification Window — Provides a short cancellation period before an emergency alert is initiated.
+| What | URL |
+|---|---|
+| **Web dashboard** (auto-deploys on every push to `main`) | https://yashvardhan2797-eng.github.io/RAKSHA-SETU/ |
+| **User app APK** (v1.2 — Android 7.0+) | https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-user-app.apk |
+| **Dashboard app APK** (v1.2 — Android 7.0+) | https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-dashboard.apk |
+| **Releases page** | https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases |
 
-📍 Location Handling — Supports transmitting available incident-location information.
-
-📡 Emergency Communication — Designed to communicate incident information to configured emergency contacts/services.
-
-🔄 Communication Fallback — Supports a fallback communication architecture when the primary channel is unavailable.
-
-📊 Real-Time Dashboard — Displays vehicle status, detected events, risk level, and emergency workflow status.
-
-🧪 Vehicle Data Simulator — Allows the complete system to be tested without physical vehicle hardware.
-
-📝 Incident Logging — Maintains structured information about detected events and response states.
+Demo login: `admin@rakshasetu.in` / `raksha123`. Demo project — no real emergency services are contacted.
 
 ## What's inside
 

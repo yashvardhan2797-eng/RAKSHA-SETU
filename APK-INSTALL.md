@@ -4,8 +4,8 @@ Two native Android apps (zero external dependencies, Android 7.0+), both built a
 
 | APK | Who it's for | What it does | Permanent public link |
 |---|---|---|---|
-| **`raksha-setu-user-app.apk`** (37 KB, **v1.2 light UI** — matches the web control center) | **The vehicle user / potential crash victim** | Login → Personal Info (name, age, gender, blood group, diseases, medication, address, GPS, emergency contacts) → big **SOS button** → **30-second cancel window** → incident history | **https://gofile.io/d/N1JMwM7a** |
-| **`raksha-setu-dashboard.apk`** (21 KB) | Control-room operator / demo spectator | Live view of ALL incidents across vehicles with risk scores, notified contacts, map links | **https://gofile.io/d/clNf4SQe** |
+| **`raksha-setu-user-app.apk`** (37 KB, **v1.2 light UI** — matches the web control center) | **The vehicle user / potential crash victim** | Login → Personal Info (name, age, gender, blood group, diseases, medication, address, GPS, emergency contacts) → big **SOS button** → **30-second cancel window** → incident history | **https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-user-app.apk** |
+| **`raksha-setu-dashboard.apk`** (21 KB) | Control-room operator / demo spectator | Live view of ALL incidents across vehicles with risk scores, notified contacts, map links | **https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-dashboard.apk** |
 
 Files also live at:
 - **`Desktop\RAKSHA-SETU-APK\`** ← real files, share by USB / WhatsApp / Drive / email
@@ -45,11 +45,13 @@ Uploaded to a permanent file host — no Wi-Fi, no laptop, no account needed. Sh
 on WhatsApp and anyone, anywhere can install:
 
 ```
-User app      : https://gofile.io/d/N1JMwM7a   (primary — works on Indian mobile data)
-Dashboard app : https://gofile.io/d/clNf4SQe
-Mirrors       : https://files.catbox.moe/l97bs6.apk  ·  .../q9fkmv.apk
-                (catbox is blocked by some Indian ISPs — use gofile first)
+User app      : https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-user-app.apk
+Dashboard app : https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/download/v1.2/raksha-setu-dashboard.apk
+Release page  : https://github.com/yashvardhan2797-eng/RAKSHA-SETU/releases/tag/v1.2
 ```
+
+GitHub-hosted (never blocked by ISPs, never expires). The gofile/catbox links
+below remain as mirrors.
 
 > **v1.2 note:** if you installed v1.0/v1.1 earlier, Android installs this as an
 > update (same signature) — the app switches from dark-navy to the light
