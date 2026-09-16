@@ -80,7 +80,7 @@ export function SimulatorPage({ pushToast }: PageProps) {
       <p className="text-xs text-slate-500">Set the crash parameters, run the deterministic physics pass, watch the vehicle and telemetry live.</p>
       <div className="flex gap-2">
         <Link href="/telemetry"><span className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"><Activity size={14} />Live Telemetry</span></Link>
-        {run && <Link href="/analysis"><span className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-700 px-3 py-2 text-xs font-bold text-white hover:bg-cyan-800"><BarChart3 size={14} />Open analysis</span></Link>}
+        {run && <Link href="/analysis"><span className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 text-xs font-bold text-[#06121c] hover:bg-cyan-500"><BarChart3 size={14} />Open analysis</span></Link>}
       </div>
     </div>
 
@@ -181,7 +181,7 @@ export function TelemetryPage() {
   if (!run || !live) return <div className="mx-auto max-w-[1100px]">
     <LabCard eyebrow="Live telemetry" title="No active simulation">
       <p className="text-xs text-slate-500">Start a run in the Crash Simulator — this view then streams speed, acceleration and phase from the same deterministic series, so telemetry can never drift from the simulation.</p>
-      <Link href="/simulator"><span className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-700 px-4 py-2.5 text-xs font-bold text-white hover:bg-cyan-800"><FlaskConical size={14} />Open Crash Simulator</span></Link>
+      <Link href="/simulator"><span className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-600 px-4 py-2.5 text-xs font-bold text-[#06121c] hover:bg-cyan-500"><FlaskConical size={14} />Open Crash Simulator</span></Link>
     </LabCard>
   </div>;
 
@@ -193,7 +193,7 @@ export function TelemetryPage() {
     <div className="flex flex-wrap items-center justify-between gap-3">
       <p className="text-xs text-slate-500">Streamed from simulation <b className="font-mono">{run.id}</b> · {run.input.vehicleMassKg} kg · {run.input.initialSpeedKmh}→{run.input.impactSpeedKmh} km/h · {run.input.impactType}</p>
       <div className="flex gap-2">
-        <button data-testid="button-telemetry-toggle" onClick={() => (playback.playing ? pause() : play())} className="inline-flex items-center gap-2 rounded-lg bg-cyan-700 px-3 py-2 text-xs font-bold text-white hover:bg-cyan-800"><Play size={13} />{playback.playing ? 'Pause' : playback.finished ? 'Replay' : 'Play'}</button>
+        <button data-testid="button-telemetry-toggle" onClick={() => (playback.playing ? pause() : play())} className="inline-flex items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 text-xs font-bold text-[#06121c] hover:bg-cyan-500"><Play size={13} />{playback.playing ? 'Pause' : playback.finished ? 'Replay' : 'Play'}</button>
         <button onClick={reset} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"><RotateCcw size={13} />Reset</button>
       </div>
     </div>
@@ -235,7 +235,7 @@ export function AnalysisPage() {
   if (!run) return <div className="mx-auto max-w-[1100px]">
     <LabCard eyebrow="Crash analysis" title="Nothing to analyse yet">
       <p className="text-xs text-slate-500">Run a simulation first — analysis breaks down the physics result, the severity score and the energy budget of the most recent run.</p>
-      <Link href="/simulator"><span className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-700 px-4 py-2.5 text-xs font-bold text-white hover:bg-cyan-800"><FlaskConical size={14} />Open Crash Simulator</span></Link>
+      <Link href="/simulator"><span className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-600 px-4 py-2.5 text-xs font-bold text-[#06121c] hover:bg-cyan-500"><FlaskConical size={14} />Open Crash Simulator</span></Link>
     </LabCard>
   </div>;
 
@@ -327,7 +327,7 @@ export function ReportsPage({ pushToast }: PageProps) {
           </tr>)}
         </tbody>
       </table></div>
-      {records.length === 0 && <div className="p-6"><p className="text-sm font-bold text-slate-700">No simulation records yet</p><p className="mt-1 max-w-md text-xs leading-5 text-slate-500">Run a crash simulation to create the first report — dashboard stats, analytics and this table all fill from stored records.</p><Link href="/simulator"><span className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-700 px-4 py-2.5 text-xs font-bold text-white"><FlaskConical size={14} />Open Crash Simulator</span></Link></div>}
+      {records.length === 0 && <div className="p-6"><p className="text-sm font-bold text-slate-700">No simulation records yet</p><p className="mt-1 max-w-md text-xs leading-5 text-slate-500">Run a crash simulation to create the first report — dashboard stats, analytics and this table all fill from stored records.</p><Link href="/simulator"><span className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-600 px-4 py-2.5 text-xs font-bold text-[#06121c]"><FlaskConical size={14} />Open Crash Simulator</span></Link></div>}
     </section>
   </div>;
 }
@@ -341,7 +341,7 @@ export function ReportDetailPage({ pushToast }: PageProps) {
   if (!record) return <div className="mx-auto max-w-[900px]">
     <LabCard eyebrow="Crash report" title="Report not found">
       <p className="text-xs text-slate-500">This simulation ID is not in the stored history (it may have been cleared or run in another browser).</p>
-      <Link href="/reports"><span className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-700 px-4 py-2.5 text-xs font-bold text-white"><ChevronLeft size={14} />Back to reports</span></Link>
+      <Link href="/reports"><span className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-cyan-600 px-4 py-2.5 text-xs font-bold text-[#06121c]"><ChevronLeft size={14} />Back to reports</span></Link>
     </LabCard>
   </div>;
 

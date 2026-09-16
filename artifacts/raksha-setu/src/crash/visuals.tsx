@@ -97,7 +97,7 @@ export function SpeedChart({ samples, height = 200 }: { samples: TelemetrySample
   const max = Math.max(10, ...data.map((d) => d.speed)) * 1.12;
   return <ChartFrame height={height}>
     <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -14 }}>
-      <CartesianGrid stroke="#eef2f5" />
+      <CartesianGrid stroke="#1a2536" />
       <XAxis dataKey="time" tick={AXIS_STYLE} tickFormatter={(t: number) => `${t.toFixed(1)}s`} />
       <YAxis tick={AXIS_STYLE} domain={[0, max]} tickFormatter={(v: number) => `${Math.round(v)}`} />
       <Tooltip
@@ -117,7 +117,7 @@ export function AccelerationChart({ samples, height = 200 }: { samples: Telemetr
   const bound = Math.max(10, ...data.map((d) => Math.abs(d.acceleration))) * 1.15;
   return <ChartFrame height={height}>
     <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -14 }}>
-      <CartesianGrid stroke="#eef2f5" />
+      <CartesianGrid stroke="#1a2536" />
       <XAxis dataKey="time" tick={AXIS_STYLE} tickFormatter={(t: number) => `${t.toFixed(1)}s`} />
       <YAxis tick={AXIS_STYLE} domain={[-bound, 4]} tickFormatter={(v: number) => `${Math.round(v)}`} />
       <Tooltip
@@ -140,7 +140,7 @@ export function EnergyChart({ samples, massKg, height = 200 }: { samples: Teleme
   const max = Math.max(1, ...data.map((d) => d.ke)) * 1.12;
   return <ChartFrame height={height}>
     <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
-      <CartesianGrid stroke="#eef2f5" />
+      <CartesianGrid stroke="#1a2536" />
       <XAxis dataKey="time" tick={AXIS_STYLE} tickFormatter={(t: number) => `${t.toFixed(1)}s`} />
       <YAxis tick={AXIS_STYLE} domain={[0, max]} tickFormatter={(v: number) => `${Math.round(v)}`} />
       <Tooltip
@@ -158,7 +158,7 @@ export function SeverityFactorChart({ factors }: { factors: { label: string; con
   const data = factors.filter((f) => f.contribution > 0);
   return <ChartFrame height={190}>
     <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 30 }}>
-      <CartesianGrid stroke="#eef2f5" horizontal={false} />
+      <CartesianGrid stroke="#1a2536" horizontal={false} />
       <XAxis type="number" domain={[0, 100]} tick={AXIS_STYLE} />
       <YAxis type="category" dataKey="label" width={90} tick={{ fontSize: 10, fill: '#475569' }} />
       <Tooltip contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid #e2e8f0' }} formatter={(value: number | string) => [`${Number(value).toFixed(1)} points`, 'Contribution']} />
@@ -174,7 +174,7 @@ export function SeverityDistributionChart({ counts }: { counts: { level: Severit
   const data = counts.map((c) => ({ name: c.level, count: c.count }));
   return <ChartFrame height={210}>
     <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -18 }}>
-      <CartesianGrid stroke="#eef2f5" />
+      <CartesianGrid stroke="#1a2536" />
       <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#475569' }} />
       <YAxis tick={AXIS_STYLE} allowDecimals={false} />
       <Tooltip contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid #e2e8f0' }} formatter={(value: number | string) => [`${value}`, 'Simulations']} />
@@ -191,7 +191,7 @@ export function DeltaVForceScatter({ points }: { points: { dv: number; force: nu
   const maxF = Math.max(50, ...points.map((p) => p.force)) * 1.15;
   return <ChartFrame height={230}>
     <LineChart margin={{ top: 8, right: 12, bottom: 4, left: -8 }}>
-      <CartesianGrid stroke="#eef2f5" />
+      <CartesianGrid stroke="#1a2536" />
       <XAxis type="number" dataKey="dv" tick={AXIS_STYLE} domain={[0, maxDv]} tickFormatter={(v: number) => `${v}`} />
       <YAxis type="number" dataKey="force" tick={AXIS_STYLE} domain={[0, maxF]} />
       <Tooltip
