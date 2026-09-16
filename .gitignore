@@ -50,3 +50,6 @@ Thumbs.db
 
 # Freebuff workspace (local only)
 .freebuff/
+
+# stray nested duplicate of this repo
+/RAKSHA-SETU/

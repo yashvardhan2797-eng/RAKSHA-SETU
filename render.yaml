@@ -1,0 +1,50 @@
+# Render Blueprint — RAKSHA SETU backend services
+# Deploy both services in one click: Render Dashboard → New → Blueprint → pick this repo.
+# After creation, paste real values for the optional secrets (SMS provider keys).
+# Every push to main auto-redeploys both services.
+
+services:
+  # ── Cloud API (incident ingest, lifecycle, contact dispatch) ──────────────
+  - type: web
+    name: raksha-setu-api
+    runtime: node
+    plan: free
+    rootDir: .            # monorepo root; pnpm workspace resolves everything
+    buildCommand: corepack enable && pnpm install && pnpm --filter @workspace/api-server run build
+    startCommand: node --enable-source-maps artifacts/api-server/dist/index.mjs
+    healthCheckPath: /api/healthz
+    envVars:
+      - key: NODE_VERSION
+        value: 24.10.0
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false       # paste a free Neon/Supabase Postgres string, or leave empty = in-memory mode
+      - key: TWILIO_ACCOUNT_SID
+        sync: false       # optional SMS provider
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM_NUMBER
+        sync: false
+      - key: MSG91_AUTH_KEY
+        sync: false
+
+  # ── Vehicle bridge (ECU agent simulator + SSE receiver dashboard) ─────────
+  - type: web
+    name: raksha-setu-vehicle
+    runtime: node
+    plan: free
+    rootDir: vehicle-integration
+    buildCommand: corepack enable && pnpm install
+    startCommand: node src/server.ts
+    envVars:
+      - key: NODE_VERSION
+        value: 24.10.0
+      - key: VEHICLE_PORT
+        value: 8080
+      - key: RAKSHA_API_URL
+        sync: false       # paste the raksha-setu-api URL (e.g. https://raksha-setu-api.onrender.com)
+      - key: RAKSHA_APP_URL
+        sync: false       # paste the web dashboard URL (GitHub Pages)
+      - key: GROQ_API_KEY
+        sync: false       # optional AI narration

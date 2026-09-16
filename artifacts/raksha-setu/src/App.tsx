@@ -6,7 +6,7 @@ import {
   Navigation, Phone, Pill, Play, Radio, RefreshCw, Search, Send, Settings, Shield, Siren, SlidersHorizontal, Sparkles,
   Square, Stethoscope, Timer, Trash2, UserRound, Users, X, Zap, type LucideIcon,
 } from 'lucide-react';
-import { Link, Redirect, Route, Switch, useLocation } from 'wouter';
+import { Link, Redirect, Route, Router, Switch, useLocation } from 'wouter';
 import {
   ambulances as seedAmbulances, analyticsData, drivers as seedDrivers, history, hospitals as seedHospitals,
   demoOwner, incidents as seedIncidents, loginUsers, notifications as seedNotifications, policeStations as seedPoliceStations,
@@ -632,7 +632,10 @@ function RoutedApp({ pushToast }: AppProps) {
   // NOTE: children form (not `component={() => <X />}`) so page components keep a
   // stable identity — inline arrows remount the page on every parent re-render,
   // which reset local UI state (drawers, countdowns, form drafts).
-  return <Switch>
+  // Router base keeps every wouter Link/Route correct when the SPA is served from a
+  // sub-path (e.g. GitHub Pages project sites, where the app lives at /<repo>/).
+  const routerBase = import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '');
+  return <Router base={routerBase}><Switch>
     <Route path="/"><Redirect to="/overview" /></Route>
     <Route path="/overview"><Overview pushToast={pushToast} /></Route>
     <Route path="/incidents"><IncidentsPage pushToast={pushToast} /></Route>
@@ -652,7 +655,7 @@ function RoutedApp({ pushToast }: AppProps) {
     <Route path="/reports/:id"><ReportDetailPage pushToast={pushToast} /></Route>
     <Route path="/methodology"><MethodologyPage /></Route>
     <Route><NotFoundPage /></Route>
-  </Switch>;
+  </Switch></Router>;
 }
 
 function NotFoundPage() {
