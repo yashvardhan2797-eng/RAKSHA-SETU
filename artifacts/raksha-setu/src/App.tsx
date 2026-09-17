@@ -669,10 +669,9 @@ function RoutedApp({ pushToast }: AppProps) {
   // NOTE: children form (not `component={() => <X />}`) so page components keep a
   // stable identity — inline arrows remount the page on every parent re-render,
   // which reset local UI state (drawers, countdowns, form drafts).
-  // Router base keeps every wouter Link/Route correct when the SPA is served from a
-  // sub-path (e.g. GitHub Pages project sites, where the app lives at /<repo>/).
-  const routerBase = import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '');
-  return <Router base={routerBase}><Switch>
+  // NOTE: the base-aware <Router> lives in <BaseRouter> at the app root (wrapping
+  // the shell too), so every Link — sidebar included — keeps the sub-path prefix.
+  return <Switch>
     <Route path="/"><Redirect to="/overview" /></Route>
     <Route path="/overview"><Overview pushToast={pushToast} /></Route>
     <Route path="/incidents"><IncidentsPage pushToast={pushToast} /></Route>
@@ -692,12 +691,22 @@ function RoutedApp({ pushToast }: AppProps) {
     <Route path="/reports/:id"><ReportDetailPage pushToast={pushToast} /></Route>
     <Route path="/methodology"><MethodologyPage /></Route>
     <Route><NotFoundPage /></Route>
-  </Switch></Router>;
+  </Switch>;
 }
 
 function NotFoundPage() {
   const [, setLocation] = useLocation();
   return <div className="flex min-h-[60vh] flex-col items-center justify-center text-center"><div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-700"><Command size={22} /></div><h1 className="mt-4 text-xl font-extrabold">Route not found</h1><p className="mt-2 text-sm text-slate-500">This control center view does not exist.</p><button onClick={() => setLocation('/overview')} className="mt-5 rounded-lg bg-cyan-600 px-4 py-2.5 text-xs font-bold text-[#06121c]">Return to overview</button></div>;
+}
+
+// One base-aware <Router> wrapping the ENTIRE app (shell, login and pages).
+// Previously the Router sat lower in the tree, so the sidebar/login used wouter's
+// baseless default router — every sidebar click then pushed a prefix-less URL
+// (github.io/drivers instead of github.io/RAKSHA-SETU/drivers) and the content
+// pane went black because no route matched.
+function BaseRouter({ children }: { children: ReactNode }) {
+  const routerBase = import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '');
+  return <Router base={routerBase}>{children}</Router>;
 }
 
 function App() {
@@ -714,6 +723,17 @@ function App() {
       return raw ? (JSON.parse(raw) as LoginUser) : null;
     } catch { return null; }
   });
+  // Self-heal legacy prefix-less URLs (old bookmarks, links from stale builds):
+  // when the app is served from a sub-path but the address bar lacks it,
+  // normalize the URL once so routes and links resolve again.
+  useEffect(() => {
+    const base = import.meta.env.BASE_URL;
+    if (base !== '/' && !window.location.pathname.startsWith(base)) {
+      const prefix = base.replace(/\/$/, '');
+      const rest = window.location.pathname.replace(/^\/+/, '');
+      window.history.replaceState(null, '', `${prefix}/${rest}${window.location.search}${window.location.hash}`);
+    }
+  }, []);
   const login = (user: LoginUser) => {
     setAuthUser(user);
     try { window.sessionStorage.setItem('rs-auth', JSON.stringify(user)); } catch { /* private mode */ }
@@ -732,8 +752,8 @@ function App() {
     setAppNotifications((current) => [{ id: `N-${Date.now()}`, title, description, time: 'Just now', unread: true, tone }, ...current]);
   };
   const store: AppStore = { incidents: appIncidents, setIncidents: setAppIncidents, vehicles: appVehicles, setVehicles: setAppVehicles, drivers: appDrivers, setDrivers: setAppDrivers, notifications: appNotifications, addNotification, ambulances: appAmbulances, setAmbulances: setAppAmbulances, userProfile: appUserProfile, setUserProfile: setAppUserProfile };
-  if (!authUser) return <AppContext.Provider value={store}><LoginPage onLogin={login} pushToast={pushToast} /></AppContext.Provider>;
-  return <AppContext.Provider value={store}><CancelWindowSweep /><AppShell toasts={toasts} pushToast={pushToast} onLogout={logout}><SimulationStoreProvider><RoutedApp pushToast={pushToast} /></SimulationStoreProvider></AppShell></AppContext.Provider>;
+  if (!authUser) return <AppContext.Provider value={store}><BaseRouter><LoginPage onLogin={login} pushToast={pushToast} /></BaseRouter></AppContext.Provider>;
+  return <AppContext.Provider value={store}><CancelWindowSweep /><BaseRouter><AppShell toasts={toasts} pushToast={pushToast} onLogout={logout}><SimulationStoreProvider><RoutedApp pushToast={pushToast} /></SimulationStoreProvider></AppShell></BaseRouter></AppContext.Provider>;
 }
 
 export default App;
